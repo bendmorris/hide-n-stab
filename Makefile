@@ -32,7 +32,7 @@ linux-final:
 
 
 server:
-	haxe -main hidenstab.Server -neko server.n -cp src -cp src-server -lib openfl -lib openfl-native -lib HaxePunk -lib spinehaxe -lib SpinePunk --macro "allowPackage('flash')" -D server
+	haxe -main hidenstab.Server -neko server.n -cp src -cp src-server -lib openfl -lib openfl-native -lib HaxePunk --macro "allowPackage('flash')" -D server
 	nekotools boot server.n
 server-run: server
 	./server

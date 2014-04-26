@@ -2,6 +2,7 @@ package hidenstab;
 
 import haxe.ds.Vector;
 import openfl.Assets;
+#if !server
 import spinehaxe.Bone;
 import spinehaxe.Slot;
 import spinehaxe.SkeletonData;
@@ -14,6 +15,7 @@ import spinehaxe.animation.TrackEntry;
 import spinehaxe.atlas.TextureAtlas;
 import spinehaxe.platform.nme.BitmapDataTextureLoader;
 import spinepunk.SpinePunk;
+#end
 import com.haxepunk.HXP;
 import com.haxepunk.Entity;
 import com.haxepunk.graphics.Image;
@@ -87,11 +89,18 @@ class Stabber extends Entity
         Dead            => 5,
     ];
     
+    public static var animationTime:Map<String, Float> = [
+        "stab" => 0.5,
+        "swing" => 0.5,
+    ];
+    
+#if !server
     static var loader:BitmapDataTextureLoader;
     static var atlas:TextureAtlas;
     static var skeletonData:SkeletonData;
     static var stateData:AnimationStateData;
     public var sp:SpinePunk;
+#end
     
     public var guid:Guid;
     public var pc:Bool=false;
@@ -103,6 +112,7 @@ class Stabber extends Entity
     public var facingRight:Bool=true;
     var flash:Float=0;
     var loopedAnimation:Bool=false;
+    var animationTimer:Float = 0;
     
     public var state(default, set):StabberState;
     function set_state(s:StabberState)
@@ -136,6 +146,7 @@ class Stabber extends Entity
         
         moving = new Point();
         
+#if !server
         if (loader == null)
         {
             loader = new BitmapDataTextureLoader();
@@ -157,14 +168,12 @@ class Stabber extends Entity
         
         sp.state = new AnimationState(stateData);
         sp.state.clearWhenFinished = false;
-#if server
-        sp.state.onEvent.add(doAttack);
-#end
         
         graphic = sp;
         
         sp.scale = 1/Defs.SCALE / Defs.CHAR_SCALE;
         sp.smooth = false;
+#end
         
         var dims:Int = Std.int(128 / Defs.SCALE / Defs.CHAR_SCALE);
         setHitbox(dims, dims, Std.int(dims/2), Std.int(dims/2 + (32 / Defs.SCALE / Defs.CHAR_SCALE)));
@@ -179,12 +188,16 @@ class Stabber extends Entity
         
         facingRight = true;
         
+#if !server
         visible = false;
         flash = 0;
         sp.color = 0xFFFFFF;
+#end
         
         revealTime = 0;
         hide();
+        
+        animationTimer = 0;
         
         moving.x = moving.y = 0;
         this.pc = pc;
@@ -196,13 +209,18 @@ class Stabber extends Entity
     function setAnimation(animationName:String, loop:Bool=true, force:Bool=false) {
         if (force || animation != animationName) {
             if (animationName != null) {
+#if server
+                animationTimer = 0;
+#else
                 sp.state.setAnimationByName(0, animationName, loop);
+#end
             }
             animation = animationName;
             loopedAnimation = loop;
         }
     }
     
+#if !server
     public var track(get, never):TrackEntry;
     function get_track() {
         var track = sp.state.tracks[0];
@@ -225,14 +243,17 @@ class Stabber extends Entity
     function get_remaining() {
         return duration - time;
     }
+#end
     
     public override function update()
     {
         if (flash > 0)
             flash = Math.max(0, flash - HXP.elapsed / Defs.FLASH_TIME);
+#if !server
         sp.color = flash > 0 ? 0xFF8080 : 0xFFFFFF;
         sp.flipX = !facingRight;
         sp.update();
+#end
         
         if (visible)
         {
@@ -291,7 +312,16 @@ class Stabber extends Entity
         
         super.update();
         
+#if server
+        if (!loopedAnimation)
+        {
+            animationTimer += HXP.elapsed;
+        }
+        
+        if (animationTime.exists(animation) && animationTimer >= animationTime[animation])
+#else
         if (!loopedAnimation && remaining <= 0)
+#end
         {
             state = Idle(Stand);
         }
@@ -301,11 +331,13 @@ class Stabber extends Entity
     
     function hide()
     {
+#if !server
         for(slot in sp.skeleton.slots) {
             if(slot.data.name == "knife" || slot.data.name == "eyes")  {
                 slot.attachment = null;
             }
         }
+#end
     }
     
     public function attack()

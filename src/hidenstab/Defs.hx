@@ -6,7 +6,7 @@ class Defs
 {
     public static inline var MAX_INT=67108864;
 
-    public static var HOST="localhost";
+    public static var HOST="192.168.1.6";
     public static var PORT=27278;
     
     public static inline var SCALE:Int=2;
