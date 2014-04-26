@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+    <meta title="Hide-n-Stab" package="com.monsterface.hidenstab" company="MonsterFace Games"/>
+    <meta version="1.0.0"/>
+    
+    <app file="hidenstab" main="Main" path="bin"/>
+    <certificate path="hidenstab.keystore" alias="creatures" password="#id3n57a8!!" if="android" unless="debug"/>
+    
+    <window fps="60" background="0x000000"/>
+    <window width="640" height="480"/>
+    <window width="0" height="0" if="mobile"/>
+    <window orientation="landscape" vsync="true"/>
+    <window resizable="false"/>
+    <window resizable="true" if="desktop"/>
+    
+    <source path="src"/>
+    <source path="src-server" if="server"/>
+    <source path="src-client" except="server"/>
+    
+    <haxelib name="openfl"/>
+    <haxelib name="HaxePunk"/>
+    <haxelib name="spinehaxe"/>
+    <haxelib name="SpinePunk"/>
+    <app preloader="Preloader" />
+    
+    <assets path="assets/data" rename="data" include="*.xml" type="text"/>
+    <assets path="assets/graphics" rename="graphics" include="*.png" type="image"/>
+    <assets path="assets/graphics" rename="graphics" include="*.json|*.atlas" type="text"/>
+    <assets path="assets/font" rename="font" include="*.fnt" type="text"/>
+    <assets path="assets/font" rename="font" include="*.png" type="image"/>
+</project>
