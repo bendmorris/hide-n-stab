@@ -14,7 +14,8 @@ import hidenstab.Defs;
 @:bitmap("assets/graphics/monsterface.png")
 class Logo extends BitmapData {}
 
-class Preloader extends NMEPreloader {
+class Preloader extends NMEPreloader
+{
     public var img:Bitmap;
     public var timer:Timer;
     public var fadeout_time:Float=0;
@@ -22,7 +23,8 @@ class Preloader extends NMEPreloader {
     static inline var w = Defs.WIDTH;
     static inline var h = Defs.HEIGHT;
 
-    public function new() {
+    public function new()
+    {
         img = new Bitmap(new Logo(0,0));
         
         super();
@@ -35,13 +37,15 @@ class Preloader extends NMEPreloader {
         outline.graphics.clear();
         outline.addChild(img);
     }
-
-    public override function onLoaded() {
+    
+    public override function onLoaded()
+    {
         timer = new Timer(Math.floor(1000/20));
         timer.run = fadeout;
     }
-
-    function fadeout() {
+    
+    function fadeout()
+    {
         fadeout_time += 1/(FADEOUT_TIME*20);
         if (fadeout_time >= 1) {
             img.alpha = progress.alpha = Math.max(0, img.alpha - 1/(FADEOUT_TIME*20));
@@ -51,12 +55,14 @@ class Preloader extends NMEPreloader {
             }
         }
     }
-
-    function done() {
+    
+    function done()
+    {
         dispatchEvent (new Event (Event.COMPLETE));
     }
     
-    public override function getWidth():Float {
+    public override function getWidth():Float
+    {
         return w;
     }
 }

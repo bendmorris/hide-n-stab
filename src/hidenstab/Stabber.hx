@@ -159,6 +159,9 @@ class Stabber extends Entity
         
         graphic = sp;
         
+        sp.scale = 1/Defs.SCALE * 0.5;
+        sp.smooth = false;
+        
         type = "stabber";
     }
     

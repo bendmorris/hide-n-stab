@@ -19,8 +19,8 @@
     
     <haxelib name="openfl"/>
     <haxelib name="HaxePunk"/>
-    <haxelib name="spinehaxe"/>
-    <haxelib name="SpinePunk"/>
+    <haxelib name="spinehaxe" except="server"/>
+    <haxelib name="SpinePunk" except="server"/>
     <app preloader="Preloader" except="server"/>
     
     <assets path="assets/graphics" rename="graphics" include="*.png" type="image"/>

@@ -5,7 +5,7 @@ import hidenstab.ClientApi;
 import hidenstab.Defs;
 
 
-class ClientData implements ServerApi {
+class ClientData {
     public var socket:Socket;
     public var stabber:Stabber;
     public var guid:Guid;
