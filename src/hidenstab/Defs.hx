@@ -4,7 +4,7 @@ typedef Guid = UInt;
 
 class Defs
 {
-    public static inline var MAX_INT=67108864;
+    public static inline var MAX_INT=256;
 
     public static var HOST="192.168.1.6";
     public static var PORT=27278;

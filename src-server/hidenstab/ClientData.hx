@@ -31,10 +31,12 @@ class ClientData {
     {
         var byteArray = Data.getByteArray();
         
+        byteArray.writeByte(Defs.MSG_SEND_CHARS);
+        
         for (guid in chars.keys())
         {
             var char = chars.get(guid);
-            if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
+            if (true)//if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
             {
                 nearby[nearbyCount++] = char;
             }
@@ -47,9 +49,11 @@ class ClientData {
             var char = nearby[n];
             var guid = char.guid;
             
-            byteArray.writeUnsignedInt(guid);
-            byteArray.writeByte(Std.int(char.x));
-            byteArray.writeByte(Std.int(char.y));
+            byteArray.writeInt(guid);
+            byteArray.writeInt(Std.int(char.x));
+            byteArray.writeInt(Std.int(char.y));
+            byteArray.writeByte(Std.int(char.moving.x + 1));
+            byteArray.writeByte(Std.int(char.moving.x + 1));
             byteArray.writeBoolean(char.changedState);
             if (char.changedState)
             {

@@ -12,7 +12,7 @@ import hidenstab.Stabber;
 
 class Server extends ThreadServer<ClientData, ByteArray>
 {
-    static inline var UPDATE_FREQ:Float=1/10;
+    static inline var UPDATE_FREQ:Float=1/20;
     
     static var clients:Map<Guid, ClientData>;
     static var chars:Map<Guid, Stabber>;
@@ -49,14 +49,17 @@ class Server extends ThreadServer<ClientData, ByteArray>
             case Defs.MSG_SEND_MOVING:
             {
                 // set moving
-                char.moving.x = msg.readUnsignedShort();
-                char.moving.y = msg.readUnsignedShort();
+                char.moving.x = msg.readByte() - 1;
+                char.moving.y = msg.readByte() - 1;
             }
             case Defs.MSG_SEND_ATTACK:
             {
                 // attack
                 char.attack();
             }
+            case Defs.MSG_SEND_TALK:
+                // talk
+                char.talk();
             default: {}
         }
     }
@@ -79,9 +82,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function clientConnected(s:Socket):ClientData
     {
-        trace("Client connected");
         var c = new ClientData(s);
         clients.set(c.guid, c);
+        
+        trace("Client connected: " + c.guid);
         
         var char:Stabber = StabberPool.get(c.guid, true);
         char.x = Std.random(Defs.WORLD_WIDTH);
