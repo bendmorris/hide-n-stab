@@ -1,5 +1,6 @@
 package hidenstab;
 
+import flash.utils.ByteArray;
 import sys.net.Socket;
 import hidenstab.Defs;
 import hidenstab.Stabber;
@@ -10,24 +11,25 @@ class ClientData {
     public var stabber:Stabber;
     public var guid:Guid;
     
+    static var byteArray:ByteArray = new ByteArray();
+    
     public function new(s:Socket)
     {
         socket = s;
-        (cast s).__private = this;
-        guid = Std.random(Defs.MAX_INT);
+        guid = Defs.newGuid();
         stabber = StabberPool.get(guid, true);
         nearby = new Array();
+    }
+    
+    function clearByteArray()
+    {
+        byteArray.clear();
     }
     
     // called when the player's client has been disconnected
     public function leave()
     {
         
-    }
-    
-    public static function ofSocket(s:Socket):ClientData
-    {
-        return (cast s).__private;
     }
     
     var nearby:Array<Stabber>;
@@ -38,25 +40,34 @@ class ClientData {
         for (guid in chars.keys())
         {
             var char = chars.get(guid);
-            if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.2 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.2)
+            if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
             {
                 nearby[nearbyCount++] = char;
             }
         }
+        
+        clearByteArray();
+        
+        byteArray.writeByte(nearbyCount);
         
         for (n in 0 ... nearbyCount)
         {
             var char = nearby[n];
             var guid = char.guid;
             
-            socket.output.writeUInt16(guid);
-            socket.output.writeByte(Std.int(char.x));
-            socket.output.writeByte(Std.int(char.y));
-            socket.output.writeByte(char.changedState ? 1 : 0);
+            byteArray.writeUnsignedInt(guid);
+            byteArray.writeByte(Std.int(char.x));
+            byteArray.writeByte(Std.int(char.y));
+            byteArray.writeBoolean(char.changedState);
             if (char.changedState)
             {
-                socket.output.writeByte(Stabber.stateToInt.get(char.state));
+                byteArray.writeByte(Stabber.stateToInt.get(char.state));
             }
         }
+        
+        nearbyCount = 0;
+        
+        socket.output.write(byteArray);
+        socket.output.flush();
     }
 }

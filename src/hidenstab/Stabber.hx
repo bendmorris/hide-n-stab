@@ -177,7 +177,6 @@ class Stabber extends Entity
         
         var dims:Int = Std.int(128 / Defs.SCALE / Defs.CHAR_SCALE);
         setHitbox(dims, dims, Std.int(dims/2), Std.int(dims/2 + (32 / Defs.SCALE / Defs.CHAR_SCALE)));
-        trace(dims);
         
         reinit(guid, pc);
     }

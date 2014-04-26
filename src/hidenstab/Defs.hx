@@ -36,4 +36,9 @@ class Defs
     public static function init()
     {
     }
+    
+    public static function newGuid():Guid
+    {
+        return Std.random(MAX_INT);
+    }
 }

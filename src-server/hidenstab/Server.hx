@@ -2,7 +2,6 @@ package hidenstab;
 
 import haxe.io.Bytes;
 import flash.utils.ByteArray;
-import flash.utils.ByteArray;
 import neko.net.ThreadServer;
 import sys.net.Socket;
 import com.haxepunk.HXP;
@@ -18,6 +17,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
     static var clients:Map<Guid, ClientData>;
     static var chars:Map<Guid, Stabber>;
     
+    static var byteArray:ByteArray = new ByteArray();
+    
     var lastUpdate:Float = 0;
     
     function new()
@@ -26,6 +27,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
         updateTime = UPDATE_FREQ;
         clients = new Map();
         chars = new Map();
+    }
+    
+    function clearByteArray()
+    {
+        byteArray.clear();
     }
     
     override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
@@ -90,8 +96,22 @@ class Server extends ThreadServer<ClientData, ByteArray>
         char.facingRight = Std.random(2) == 0;
         chars.set(c.guid, char);
         
-        s.output.writeByte(Defs.MSG_SEND_GUID);
-        s.output.writeUInt16(c.guid);
+        // add random non-pc characters
+        for (i in 0 ... (2 + Std.random(3)))
+        {
+            var char:Stabber = StabberPool.get(c.guid, false);
+            char.x = Std.random(Defs.WORLD_WIDTH);
+            char.y = Std.random(Defs.WORLD_HEIGHT);
+            char.facingRight = Std.random(2) == 0;
+            chars.set(Defs.newGuid(), char);
+        }
+        
+        clearByteArray();
+        
+        byteArray.writeByte(Defs.MSG_SEND_GUID);
+        byteArray.writeUnsignedInt(c.guid);
+        
+        s.output.write(byteArray);
         s.output.flush();
         return c;
     }
