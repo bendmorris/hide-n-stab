@@ -7,7 +7,7 @@ import hidenstab.Defs;
 
 class ClientData implements ServerApi {
     public var socket:Socket;
-    public var player:Player;
+    public var stabber:Stabber;
     public var guid:Guid;
     
     public function new(s:Socket)
@@ -22,9 +22,13 @@ class ClientData implements ServerApi {
     {
         
     }
-
+    
     public static function ofSocket(s:Socket):ClientData
     {
         return (cast s).__private;
+    }
+    
+    public function update()
+    {
     }
 }

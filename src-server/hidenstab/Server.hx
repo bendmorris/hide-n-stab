@@ -1,12 +1,10 @@
 package hidenstab;
 
 import haxe.io.Bytes;
-import haxe.Serializer;
-import haxe.Unserializer;
-import haxe.remoting.Context;
-import haxe.remoting.SocketConnection;
+import flash.utils.ByteArray;
 import neko.net.ThreadServer;
 import sys.net.Socket;
+import com.haxepunk.HXP;
 import hidenstab.ClientApi;
 import hidenstab.Defs;
 import flash.utils.ByteArray;
@@ -28,16 +26,37 @@ class Server extends ThreadServer<ClientData, ByteArray>
         clients = new Map();
     }
     
+    override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
+    {
+        var ba:ByteArray;
+#if flash
+        ba = buf.getData();
+#else
+        ba = ByteArray.fromBytes(buf);
+#end
+        return { msg : ba, bytes : len };
+    }
+    
+    override function clientMessage(c:ClientData, msg:ByteArray)
+    {
+        var msgType = msg.readUnsignedShort();
+        switch(msgType)
+        {
+            default: {}
+        }
+    }
+    
     override function update() {
         var curTime = Sys.time();
         
         if (lastUpdate > 0)
         {
             var elapsedTime = curTime - lastUpdate;
-            /*for (client in clients.iterator())
+            HXP.elapsed = elapsedTime;
+            for (client in clients.iterator())
             {
-                client.update(elapsedTime);
-            }*/
+                client.update();
+            }
         }
         
         lastUpdate = curTime;
@@ -56,13 +75,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
     {
         trace("Client disconnected");
         clientData.leave();
-        if (clientData.player != null)
+        
+        var id = clientData.guid;
+        if (clients.exists(id))
         {
-            var id = clientData.guid;
-            if (clients.exists(id))
-            {
-                clients.remove(id);
-            }
+            clients.remove(id);
         }
     }
     
@@ -71,8 +88,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var host = Defs.HOST;
         if (args.length > 0) Defs.HOST = args[0];
         if (args.length > 1) Defs.PORT = Std.parseInt(args[1]);
-        
-        var p = new Player();
         
         var server = new Server();
         trace("Starting server (HOST=" + Defs.HOST + ", PORT=" + Defs.PORT + ")");

@@ -21,9 +21,8 @@
     <haxelib name="HaxePunk"/>
     <haxelib name="spinehaxe"/>
     <haxelib name="SpinePunk"/>
-    <app preloader="Preloader" />
+    <app preloader="Preloader" except="server"/>
     
-    <assets path="assets/data" rename="data" include="*.xml" type="text"/>
     <assets path="assets/graphics" rename="graphics" include="*.png" type="image"/>
     <assets path="assets/graphics" rename="graphics" include="*.json|*.atlas" type="text"/>
     <assets path="assets/font" rename="font" include="*.fnt" type="text"/>
