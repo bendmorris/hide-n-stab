@@ -70,9 +70,7 @@ class Client
         {
             case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
-                trace('hey its your id');
                 id = buf.readUnsignedInt();
-                trace(id);
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
@@ -92,8 +90,11 @@ class Client
                     
                     char.x = buf.readInt();
                     char.y = buf.readInt();
-                    char.moving.x = buf.readInt();
-                    char.moving.y = buf.readInt();
+                    if (guid != id)
+                    {
+                        char.moving.x = buf.readByte();
+                        char.moving.y = buf.readByte();
+                    }
                     var stateChanged = buf.readBoolean();
                     if (stateChanged)
                     {

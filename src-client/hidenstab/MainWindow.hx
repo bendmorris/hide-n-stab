@@ -25,6 +25,7 @@ class MainWindow extends Scene
         add(e);
         
         moving = new Point();
+        lastMovingSent = new Point();
         
         Input.define("up", [Key.UP, Key.W]);
         Input.define("down", [Key.DOWN, Key.S]);
@@ -49,7 +50,6 @@ class MainWindow extends Scene
             add(newChar);
         }
         
-        trace('before');
         if (client.id != -1)
         {
             s = client.chars.get(client.id);
@@ -71,22 +71,28 @@ class MainWindow extends Scene
                 if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y)
                 {
                     var ba = Data.getByteArray();
-                    ba.writeInt(moving.x);
-                    ba.writeInt(moving.y);
-                    Data.send(client.socket);
+                    ba.writeByte(Defs.MSG_SEND_MOVING);
+                    ba.writeByte(Std.int(moving.x));
+                    ba.writeByte(Std.int(moving.y));
+                    Data.write(client.socket);
+                    
+                    lastMovingSent.x = moving.x;
+                    lastMovingSent.y = moving.y;
                 }
                 
                 if (Input.pressed("attack")) {
                     s.attack();
+                    
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_ATTACK);
-                    Data.send(client.socket);
+                    Data.write(client.socket);
                 }
                 if (Input.pressed("talk")) {
                     s.talk();
+                    
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_TALK);
-                    Data.send(client.socket);
+                    Data.write(client.socket);
                 }
                 
                 HXP.camera.x = Std.int(HXP.clamp(HXP.camera.x, 
@@ -98,7 +104,6 @@ class MainWindow extends Scene
             }
         }
         
-        trace('after');
         super.update();
     }
 }
