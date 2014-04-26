@@ -1,6 +1,5 @@
 package hidenstab;
 
-import flash.utils.ByteArray;
 import sys.net.Socket;
 import hidenstab.Defs;
 import hidenstab.Stabber;
@@ -11,19 +10,12 @@ class ClientData {
     public var stabber:Stabber;
     public var guid:Guid;
     
-    static var byteArray:ByteArray = new ByteArray();
-    
     public function new(s:Socket)
     {
         socket = s;
         guid = Defs.newGuid();
         stabber = StabberPool.get(guid, true);
         nearby = new Array();
-    }
-    
-    function clearByteArray()
-    {
-        byteArray.clear();
     }
     
     // called when the player's client has been disconnected
@@ -37,6 +29,8 @@ class ClientData {
     
     public function update(chars:Map<Guid, Stabber>)
     {
+        var byteArray = Data.getByteArray();
+        
         for (guid in chars.keys())
         {
             var char = chars.get(guid);
@@ -45,8 +39,6 @@ class ClientData {
                 nearby[nearbyCount++] = char;
             }
         }
-        
-        clearByteArray();
         
         byteArray.writeByte(nearbyCount);
         
@@ -67,7 +59,6 @@ class ClientData {
         
         nearbyCount = 0;
         
-        socket.output.write(byteArray);
-        socket.output.flush();
+        Data.write(socket);
     }
 }

@@ -17,8 +17,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
     static var clients:Map<Guid, ClientData>;
     static var chars:Map<Guid, Stabber>;
     
-    static var byteArray:ByteArray = new ByteArray();
-    
     var lastUpdate:Float = 0;
     
     function new()
@@ -27,11 +25,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         updateTime = UPDATE_FREQ;
         clients = new Map();
         chars = new Map();
-    }
-    
-    function clearByteArray()
-    {
-        byteArray.clear();
     }
     
     override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
@@ -106,13 +99,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
             chars.set(Defs.newGuid(), char);
         }
         
-        clearByteArray();
+        var byteArray = Data.getByteArray();
         
         byteArray.writeByte(Defs.MSG_SEND_GUID);
         byteArray.writeUnsignedInt(c.guid);
         
-        s.output.write(byteArray);
-        s.output.flush();
+        Data.write(s);
+        
         return c;
     }
     
