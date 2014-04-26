@@ -7,7 +7,6 @@ import com.haxepunk.HXP;
 import com.haxepunk.Engine;
 import com.haxepunk.RenderMode;
 import hidenstab.Defs;
-import hidenstab.Client;
 import hidenstab.MainWindow;
 
 
@@ -18,7 +17,6 @@ class Main extends Engine {
     static var bArray:Array<Int> = [];
     public static inline var COLOR_LEVELS:Int=16;
 #end
-    
     
     public override function new(width:Int=0, height:Int=0, frameRate:Float=60, fixed:Bool=false, ?renderMode:RenderMode) {
         super(Defs.WIDTH, Defs.HEIGHT, frameRate, fixed, renderMode);
@@ -41,7 +39,6 @@ class Main extends Engine {
         
         
         Defs.init();
-        //Client.init();
         HXP.screen.color = Defs.BGCOLOR;
         HXP.scene = new MainWindow();
     }

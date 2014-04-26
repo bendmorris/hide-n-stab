@@ -31,7 +31,8 @@ class Defs
     public static inline var MSG_SEND_CHARS=1;
     public static inline var MSG_SEND_MOVING=2;
     public static inline var MSG_SEND_ATTACK=3;
-    public static inline var MSG_SEND_STATE=4;
+    public static inline var MSG_SEND_TALK=4;
+    public static inline var MSG_SEND_STATE=5;
     
     public static function init()
     {

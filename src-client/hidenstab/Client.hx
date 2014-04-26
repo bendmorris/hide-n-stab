@@ -1,6 +1,7 @@
 package hidenstab;
 
 import flash.net.Socket;
+import flash.utils.ByteArray;
 import flash.events.Event;
 import hidenstab.Defs;
 import hidenstab.Stabber;
@@ -21,21 +22,22 @@ class Client
         current.connect();
     }
     
-    var socket:Socket;
+    public var socket:Socket;
     
-    var chars:Map<Int, Stabber>;
-    var id:Guid;
+    public var newChars:Array<Stabber>;
+    public var chars:Map<Int, Stabber>;
+    public var id:Int=-1;
     
     public function new()
     {
         chars = new Map();
         lastSeen = new Map();
         thisSeen = new Map();
-        
-        connect();
+        newChars = new Array();
     }
     
-    public function connect() {
+    public function connect()
+    {
         socket = new Socket();
         socket.addEventListener(Event.CONNECT, onConnect);
         var host = Defs.HOST;
@@ -43,9 +45,13 @@ class Client
         socket.connect(host, port);
     }
     
-    public function update() {
-        while (socket.bytesAvailable > 0) {
-            readMessage();
+    public function update()
+    {
+        while (socket.bytesAvailable > 0)
+        {
+            var buf = new ByteArray();
+            socket.readBytes(buf);
+            readMessage(buf);
         }
     }
     
@@ -56,59 +62,64 @@ class Client
     {
     }
     
-    function readMessage()
+    function readMessage(buf:ByteArray)
     {
-        var msgType = socket.readByte();
+        var msgType = buf.readByte();
+        
         switch(msgType)
         {
             case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
-                id = socket.readUnsignedInt();
+                trace('hey its your id');
+                id = buf.readUnsignedInt();
+                trace(id);
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
-                var n = socket.readByte();
+                var n = buf.readByte();
+                
                 for (i in 0 ... n)
                 {
-                    var guid = socket.readUnsignedInt();
+                    var guid = buf.readInt();
                     var char:Stabber = chars.get(guid);
                     
                     if (char == null)
                     {
                         char = StabberPool.get(guid);
                         chars[guid] = char;
+                        newChars.push(char);
                     }
                     
-                    char.x = socket.readByte();
-                    char.y = socket.readByte();
-                    char.moving.x = socket.readByte();
-                    char.moving.y = socket.readByte();
-                    var stateChanged = socket.readByte() == 1;
+                    char.x = buf.readInt();
+                    char.y = buf.readInt();
+                    char.moving.x = buf.readInt();
+                    char.moving.y = buf.readInt();
+                    var stateChanged = buf.readBoolean();
                     if (stateChanged)
                     {
-                        var newState:UInt = socket.readByte();
+                        var newState:UInt = buf.readByte();
                         char.state = Stabber.intToState.get(newState);
                     }
                     
                     thisSeen.set(guid, true);
                 }
+                
+                for (id in lastSeen.keys())
+                {
+                    if (!thisSeen.exists(id))
+                    {
+                        var thisChar = chars.get(id);
+                        thisChar.scene.remove(thisChar);
+                        chars.remove(id);
+                    }
+                    
+                    lastSeen.remove(id);
+                }
+                
+                var emptyMap = lastSeen;
+                lastSeen = thisSeen;
+                thisSeen = emptyMap;
             }
         }
-        
-        for (id in lastSeen.keys())
-        {
-            if (!thisSeen.exists(id))
-            {
-                var thisChar = chars.get(id);
-                thisChar.scene.remove(thisChar);
-                chars.remove(id);
-            }
-            
-            lastSeen.remove(id);
-        }
-        
-        var emptyMap = lastSeen;
-        lastSeen = thisSeen;
-        thisSeen = emptyMap;
     }
 }
