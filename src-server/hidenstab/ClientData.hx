@@ -52,8 +52,8 @@ class ClientData {
             byteArray.writeInt(guid);
             byteArray.writeInt(Std.int(char.x));
             byteArray.writeInt(Std.int(char.y));
-            byteArray.writeByte(Std.int(char.moving.x + 1));
-            byteArray.writeByte(Std.int(char.moving.x + 1));
+            byteArray.writeByte(Std.int(char.moving.x));
+            byteArray.writeByte(Std.int(char.moving.y));
             byteArray.writeBoolean(char.changedState);
             if (char.changedState)
             {

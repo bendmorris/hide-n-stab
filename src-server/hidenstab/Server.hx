@@ -48,18 +48,17 @@ class Server extends ThreadServer<ClientData, ByteArray>
         {
             case Defs.MSG_SEND_MOVING:
             {
+                trace(char.guid + ' moving');
                 // set moving
-                char.moving.x = msg.readByte() - 1;
-                char.moving.y = msg.readByte() - 1;
+                char.moving.x = msg.readByte();
+                char.moving.y = msg.readByte();
             }
-            case Defs.MSG_SEND_ATTACK:
+            case Defs.MSG_SEND_STATE:
             {
                 // attack
-                char.attack();
+                trace(char.guid + ' state change');
+                char.state = Stabber.intToState.get(msg.readByte());
             }
-            case Defs.MSG_SEND_TALK:
-                // talk
-                char.talk();
             default: {}
         }
     }
@@ -71,6 +70,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         {
             var elapsedTime = curTime - lastUpdate;
             HXP.elapsed = elapsedTime;
+            
+            for (char in chars.iterator())
+            {
+                char.changedState = false;
+                char.update();
+            }
+            
             for (client in clients.iterator())
             {
                 client.update(chars);
