@@ -61,11 +61,11 @@ class Client
         var msgType = socket.readByte();
         switch(msgType)
         {
-            case 0: {
+            case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
                 id = socket.readUnsignedInt();
             }
-            case 1: {
+            case Defs.MSG_SEND_CHARS: {
                 // character updates
                 var n = socket.readByte();
                 for (i in 0 ... n)
@@ -81,8 +81,9 @@ class Client
                     
                     char.x = socket.readByte();
                     char.y = socket.readByte();
-                    char.facingRight = socket.readBoolean();
-                    var stateChanged = socket.readBoolean();
+                    char.moving.x = socket.readByte();
+                    char.moving.y = socket.readByte();
+                    var stateChanged = socket.readByte() == 1;
                     if (stateChanged)
                     {
                         var newState:UInt = socket.readByte();

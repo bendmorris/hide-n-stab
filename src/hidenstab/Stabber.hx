@@ -45,15 +45,15 @@ enum StabberState
 
 class StabberPool
 {
-    public static inline var POOL_SIZE=128;
+    public static inline var POOL_SIZE=256;
     static var pool:Vector<Stabber> = new Vector(POOL_SIZE);
     static var n:Int = -1;
     
-    public static function get(guid:Guid):Stabber
+    public static function get(guid:Guid, pc:Bool=false):Stabber
     {
         if (n >= 0) {
             var newItem = pool[n--];
-            newItem.reinit(guid);
+            newItem.reinit(guid, pc);
             return newItem;
         } else {
             return new Stabber(guid);
@@ -87,7 +87,6 @@ class Stabber extends Entity
         Dead            => 5,
     ];
     
-    static var hbSlots = ["torso", "legs",];
     static var loader:BitmapDataTextureLoader;
     static var atlas:TextureAtlas;
     static var skeletonData:SkeletonData;
@@ -95,10 +94,12 @@ class Stabber extends Entity
     public var sp:SpinePunk;
     
     public var guid:Guid;
+    public var pc:Bool=false;
     
     public var changedState:Bool = true;
     public var revealTime:Float = 0;
     
+    public var moving:Point;
     public var facingRight:Bool=true;
     var flash:Float=0;
     var loopedAnimation:Bool=false;
@@ -118,7 +119,10 @@ class Stabber extends Entity
                     case Swing: setAnimation("swing", false);
                     case Stab: setAnimation("stab", false);
                 };
-                case Dead: setAnimation("dead", false);
+                case Dead: {
+                    setAnimation("dead", false);
+                    flash = 1;
+                }
             }
             
             changedState = true;
@@ -129,6 +133,8 @@ class Stabber extends Entity
     public function new(guid:Guid, pc:Bool=false)
     {
         super();
+        
+        moving = new Point();
         
         if (loader == null)
         {
@@ -155,19 +161,19 @@ class Stabber extends Entity
         sp.state.onEvent.add(doAttack);
 #end
         
-        reinit(guid);
-        
-        sp.hitboxSlots = hbSlots;
-        
         graphic = sp;
         
         sp.scale = 1/Defs.SCALE / Defs.CHAR_SCALE;
         sp.smooth = false;
         
-        type = "stabber";
+        var dims:Int = Std.int(128 / Defs.SCALE / Defs.CHAR_SCALE);
+        setHitbox(dims, dims, Std.int(dims/2), Std.int(dims/2 + (32 / Defs.SCALE / Defs.CHAR_SCALE)));
+        trace(dims);
+        
+        reinit(guid, pc);
     }
     
-    public function reinit(guid:Guid)
+    public function reinit(guid:Guid, pc:Bool)
     {
         state = Idle(Stand);
         
@@ -179,6 +185,9 @@ class Stabber extends Entity
         
         revealTime = 0;
         hide();
+        
+        moving.x = moving.y = 0;
+        this.pc = pc;
         
         this.guid = guid;
     }
@@ -220,13 +229,12 @@ class Stabber extends Entity
     public override function update()
     {
         if (flash > 0)
-            flash = Math.max(0, flash - HXP.elapsed / (Defs.FLASH_TIME * sp.scale));
+            flash = Math.max(0, flash - HXP.elapsed / Defs.FLASH_TIME);
         sp.color = flash > 0 ? 0xFF8080 : 0xFFFFFF;
         sp.flipX = !facingRight;
         sp.update();
-        setHitboxTo(sp.mainHitbox);
         
-        if (width > 0 && height > 0)
+        if (visible)
         {
             switch(state)
             {
@@ -235,9 +243,42 @@ class Stabber extends Entity
                     _scene.remove(this);
                     StabberPool.recycle(this);
                 }
+                case Idle(i):
+                {
+                    if (moving.x != 0 || moving.y != 0) state = Walk;
+                }
+                case Walk:
+                {
+                    var spd:Float = (revealTime > 0) ? Defs.RUN_MULT : 1;
+                    if (moving.x == 0 && moving.y == 0)
+                    {
+                        state = Idle(Stand);
+                    }
+                    else
+                    {
+                        // move
+                        if (moving.x != 0 && moving.y != 0) spd /= 1.4142;
+                        
+                        if (moving.x != 0)
+                        {
+                            x += moving.x * spd * HXP.elapsed * Defs.MOVE_PER_SEC;
+                            facingRight = moving.x > 0;
+                        }
+                        if (moving.y != 0)
+                        {
+                            y += moving.y * spd * HXP.elapsed * Defs.MOVE_PER_SEC * Defs.Y_SPEED;
+                        }
+                        
+                        x = HXP.clamp(x, width, Defs.WORLD_WIDTH-width);
+                        y = HXP.clamp(y, height, Defs.WORLD_HEIGHT-height);
+                    }
+                }
+                
                 default: {}
             }
         }
+        
+        layer = Std.int((Defs.WORLD_HEIGHT - y) / 10);
         
         if (revealTime > 0)
         {
@@ -269,7 +310,20 @@ class Stabber extends Entity
     
     public function attack()
     {
-        
+        revealTime = 1;
+        state = Attack(Std.random(2) == 0 ? Stab : Swing);
+    }
+    
+    public function talk()
+    {
+        state = switch(state) {
+            case Idle(t): {
+                Idle(t == Talk ? Stand : Talk);
+            }
+            default: {
+                Idle(Talk);
+            }
+        };
     }
     
 #if server

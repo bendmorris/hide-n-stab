@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="tiles.svg"
+   inkscape:export-filename="/home/ben/Dev/hide-n-stab/assets/graphics/tiles.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs2987">
+    <filter
+       id="filter3149"
+       inkscape:menu-tooltip="Pressed metal with a rolled edge"
+       inkscape:menu="Bevels"
+       inkscape:label="Pressed steel"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3151"
+         result="result1"
+         stdDeviation="3" />
+      <feBlend
+         id="feBlend3153"
+         in2="result1"
+         result="result5"
+         mode="multiply"
+         in="result1" />
+      <feGaussianBlur
+         id="feGaussianBlur3155"
+         in="result5"
+         result="result6"
+         stdDeviation="1" />
+      <feComposite
+         id="feComposite3157"
+         in2="result5"
+         result="result8"
+         in="result6"
+         operator="xor" />
+      <feComposite
+         id="feComposite3159"
+         in2="result8"
+         in="result6"
+         result="fbSourceGraphic"
+         operator="xor" />
+      <feSpecularLighting
+         id="feSpecularLighting3161"
+         in="fbSourceGraphic"
+         result="result1"
+         lighting-color="#ffffff"
+         surfaceScale="2"
+         specularConstant="2.20000005"
+         specularExponent="55">
+        <fePointLight
+           id="fePointLight3163"
+           x="-5000"
+           y="-10000"
+           z="20000" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3165"
+         in2="fbSourceGraphic"
+         in="result1"
+         result="result2"
+         operator="in" />
+      <feComposite
+         id="feComposite3167"
+         in2="result2"
+         in="fbSourceGraphic"
+         result="result4"
+         operator="arithmetic"
+         k2="2"
+         k3="1"
+         k1="0"
+         k4="0" />
+      <feComposite
+         id="feComposite3169"
+         in2="result4"
+         operator="in"
+         result="result91" />
+      <feBlend
+         id="feBlend3171"
+         in2="result91"
+         mode="darken" />
+    </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3206">
+      <rect
+         style="fill:#6c5353;stroke:none"
+         id="rect3208"
+         width="69.355843"
+         height="69.355843"
+         x="-2.6779208"
+         y="-2.6779208" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3206-7">
+      <rect
+         style="fill:#6c5353;stroke:none"
+         id="rect3208-7"
+         width="69.355843"
+         height="69.355843"
+         x="-2.6779208"
+         y="-2.6779208" />
+    </clipPath>
+    <filter
+       id="filter3149-8"
+       inkscape:menu-tooltip="Pressed metal with a rolled edge"
+       inkscape:menu="Bevels"
+       inkscape:label="Pressed steel"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3151-3"
+         result="result1"
+         stdDeviation="3" />
+      <feBlend
+         id="feBlend3153-5"
+         in2="result1"
+         result="result5"
+         mode="multiply"
+         in="result1" />
+      <feGaussianBlur
+         id="feGaussianBlur3155-7"
+         in="result5"
+         result="result6"
+         stdDeviation="1" />
+      <feComposite
+         id="feComposite3157-8"
+         in2="result5"
+         result="result8"
+         in="result6"
+         operator="xor" />
+      <feComposite
+         id="feComposite3159-2"
+         in2="result8"
+         in="result6"
+         result="fbSourceGraphic"
+         operator="xor" />
+      <feSpecularLighting
+         id="feSpecularLighting3161-2"
+         in="fbSourceGraphic"
+         result="result1"
+         lighting-color="#ffffff"
+         surfaceScale="2"
+         specularConstant="2.20000005"
+         specularExponent="55">
+        <fePointLight
+           id="fePointLight3163-9"
+           x="-5000"
+           y="-10000"
+           z="20000" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3165-9"
+         in2="fbSourceGraphic"
+         in="result1"
+         result="result2"
+         operator="in" />
+      <feComposite
+         id="feComposite3167-1"
+         in2="result2"
+         in="fbSourceGraphic"
+         result="result4"
+         operator="arithmetic"
+         k2="2"
+         k3="1"
+         k1="0"
+         k4="0" />
+      <feComposite
+         id="feComposite3169-0"
+         in2="result4"
+         operator="in"
+         result="result91" />
+      <feBlend
+         id="feBlend3171-0"
+         in2="result91"
+         mode="darken" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.8890873"
+     inkscape:cx="-1.9797321"
+     inkscape:cy="41.087013"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2995"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="4px"
+       spacingy="4px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,64)">
+    <rect
+       style="fill:#6c5353;stroke:#000000;stroke-width:1.08368504;filter:url(#filter3149)"
+       id="rect2997"
+       width="64"
+       height="64"
+       x="0"
+       y="0"
+       ry="0"
+       transform="matrix(0.92277735,0,0,0.92277735,2.4711247,2.4711247)"
+       clip-path="url(#clipPath3206)" />
+    <rect
+       style="fill:#483737;stroke:#000000;stroke-width:1.08368503999999999;filter:url(#filter3149-8)"
+       id="rect2997-7"
+       width="64"
+       height="64"
+       x="0"
+       y="0"
+       ry="0"
+       transform="matrix(0.92277735,0,0,0.92277735,66.471125,-61.528876)"
+       clip-path="url(#clipPath3206-7)" />
+    <rect
+       clip-path="url(#clipPath3206-7)"
+       transform="matrix(0.92277735,0,0,0.92277735,2.4711247,-61.528876)"
+       ry="0"
+       y="0"
+       x="0"
+       height="64"
+       width="64"
+       id="rect3270"
+       style="fill:#916f6f;stroke:#000000;stroke-width:1.08368504000000021;filter:url(#filter3149-8)" />
+    <rect
+       clip-path="url(#clipPath3206-7)"
+       transform="matrix(0.92277735,0,0,0.92277735,66.471125,2.471124)"
+       ry="0"
+       y="0"
+       x="0"
+       height="64"
+       width="64"
+       id="rect3272"
+       style="fill:#6c5d53;stroke:#000000;stroke-width:1.08368504000000021;filter:url(#filter3149-8)" />
+    <rect
+       style="fill:#e6e6e6;stroke:none;opacity:0.50000000000000000"
+       id="rect3015"
+       width="128"
+       height="128"
+       x="0"
+       y="0"
+       transform="translate(0,-64)" />
+  </g>
+</svg>

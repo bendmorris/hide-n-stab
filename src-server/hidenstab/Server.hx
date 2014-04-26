@@ -2,12 +2,12 @@ package hidenstab;
 
 import haxe.io.Bytes;
 import flash.utils.ByteArray;
+import flash.utils.ByteArray;
 import neko.net.ThreadServer;
 import sys.net.Socket;
 import com.haxepunk.HXP;
-import hidenstab.ClientApi;
 import hidenstab.Defs;
-import flash.utils.ByteArray;
+import hidenstab.Stabber;
 
 
 
@@ -15,6 +15,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
 {
     static inline var UPDATE_FREQ:Float=1/10;
     
+    static var clients:Map<Guid, ClientData>;
     static var chars:Map<Guid, Stabber>;
     
     var lastUpdate:Float = 0;
@@ -24,6 +25,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         super();
         updateTime = UPDATE_FREQ;
         clients = new Map();
+        chars = new Map();
     }
     
     override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
@@ -45,13 +47,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var msgType = msg.readByte();
         switch(msgType)
         {
-            case 0:
+            case Defs.MSG_SEND_MOVING:
             {
                 // set moving
                 char.moving.x = msg.readUnsignedShort();
                 char.moving.y = msg.readUnsignedShort();
             }
-            case 1:
+            case Defs.MSG_SEND_ATTACK:
             {
                 // attack
                 char.attack();
@@ -69,7 +71,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
             HXP.elapsed = elapsedTime;
             for (client in clients.iterator())
             {
-                client.update();
+                client.update(chars);
             }
         }
         
@@ -81,9 +83,16 @@ class Server extends ThreadServer<ClientData, ByteArray>
         trace("Client connected");
         var c = new ClientData(s);
         clients.set(c.guid, c);
-        s.writeByte(0);
-        s.writeUnsignedInt(c.guid);
-        s.flush();
+        
+        var char:Stabber = StabberPool.get(c.guid, true);
+        char.x = Std.random(Defs.WORLD_WIDTH);
+        char.y = Std.random(Defs.WORLD_HEIGHT);
+        char.facingRight = Std.random(2) == 0;
+        chars.set(c.guid, char);
+        
+        s.output.writeByte(Defs.MSG_SEND_GUID);
+        s.output.writeUInt16(c.guid);
+        s.output.flush();
         return c;
     }
     
@@ -93,6 +102,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
         clientData.leave();
         
         var id = clientData.guid;
+        if (chars.exists(id))
+        {
+            chars.remove(id);
+        }
+        
         if (clients.exists(id))
         {
             clients.remove(id);
