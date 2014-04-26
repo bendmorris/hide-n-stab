@@ -1,0 +1,6 @@
+package hidenstab;
+
+
+interface ServerApi
+{
+}
