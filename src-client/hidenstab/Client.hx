@@ -23,7 +23,7 @@ class Client
     
     var socket:Socket;
     
-    var chars:Map<Guid, Stabber>;
+    var chars:Map<Int, Stabber>;
     
     public function new()
     {
