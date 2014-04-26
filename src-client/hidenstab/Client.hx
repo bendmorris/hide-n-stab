@@ -24,6 +24,7 @@ class Client
     var socket:Socket;
     
     var chars:Map<Int, Stabber>;
+    var id:Guid;
     
     public function new()
     {
@@ -57,12 +58,16 @@ class Client
     
     function readMessage()
     {
-        var msgType = socket.readUnsignedShort();
+        var msgType = socket.readByte();
         switch(msgType)
         {
             case 0: {
+                // receive this character's ID
+                id = socket.readUnsignedInt();
+            }
+            case 1: {
                 // character updates
-                var n = socket.readUnsignedShort();
+                var n = socket.readByte();
                 for (i in 0 ... n)
                 {
                     var guid = socket.readUnsignedInt();
@@ -74,13 +79,13 @@ class Client
                         chars[guid] = char;
                     }
                     
-                    char.x = socket.readUnsignedShort();
-                    char.y = socket.readUnsignedShort();
+                    char.x = socket.readByte();
+                    char.y = socket.readByte();
                     char.facingRight = socket.readBoolean();
                     var stateChanged = socket.readBoolean();
                     if (stateChanged)
                     {
-                        var newState:UInt = socket.readUnsignedShort();
+                        var newState:UInt = socket.readByte();
                         char.state = Stabber.intToState.get(newState);
                     }
                     

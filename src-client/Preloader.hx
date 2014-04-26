@@ -20,8 +20,8 @@ class Preloader extends NMEPreloader
     public var timer:Timer;
     public var fadeout_time:Float=0;
     public static inline var FADEOUT_TIME:Float=0.25;
-    static inline var w = Defs.WIDTH;
-    static inline var h = Defs.HEIGHT;
+    static inline var w = Defs.WIDTH*Defs.SCALE;
+    static inline var h = Defs.HEIGHT*Defs.SCALE;
 
     public function new()
     {
@@ -32,7 +32,7 @@ class Preloader extends NMEPreloader
         outline.x = (w - (img.width))/2;
         outline.y = (h - (img.height))/2;
         
-        progress.y = outline.y + outline.height + 60;
+        progress.y = outline.y + outline.height + 60 * Defs.SCALE;
         
         outline.graphics.clear();
         outline.addChild(img);

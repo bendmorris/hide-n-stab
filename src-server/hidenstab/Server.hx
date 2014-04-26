@@ -15,7 +15,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
 {
     static inline var UPDATE_FREQ:Float=1/10;
     
-    static var clients:Map<Guid, ClientData>;
+    static var chars:Map<Guid, Stabber>;
     
     var lastUpdate:Float = 0;
     
@@ -39,9 +39,23 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function clientMessage(c:ClientData, msg:ByteArray)
     {
-        var msgType = msg.readUnsignedShort();
+        var id = c.guid;
+        var char = chars.get(id);
+        
+        var msgType = msg.readByte();
         switch(msgType)
         {
+            case 0:
+            {
+                // set moving
+                char.moving.x = msg.readUnsignedShort();
+                char.moving.y = msg.readUnsignedShort();
+            }
+            case 1:
+            {
+                // attack
+                char.attack();
+            }
             default: {}
         }
     }
@@ -64,10 +78,12 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function clientConnected(s:Socket):ClientData
     {
-        s.setFastSend(true);
         trace("Client connected");
         var c = new ClientData(s);
         clients.set(c.guid, c);
+        s.writeByte(0);
+        s.writeUnsignedInt(c.guid);
+        s.flush();
         return c;
     }
     

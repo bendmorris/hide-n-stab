@@ -97,9 +97,11 @@ class Stabber extends Entity
     public var guid:Guid;
     
     public var changedState:Bool = true;
+    public var revealTime:Float = 0;
     
     public var facingRight:Bool=true;
     var flash:Float=0;
+    var loopedAnimation:Bool=false;
     
     public var state(default, set):StabberState;
     function set_state(s:StabberState)
@@ -124,7 +126,7 @@ class Stabber extends Entity
         return state = s;
     }
     
-    public function new(guid:Guid)
+    public function new(guid:Guid, pc:Bool=false)
     {
         super();
         
@@ -159,7 +161,7 @@ class Stabber extends Entity
         
         graphic = sp;
         
-        sp.scale = 1/Defs.SCALE * 0.5;
+        sp.scale = 1/Defs.SCALE / Defs.CHAR_SCALE;
         sp.smooth = false;
         
         type = "stabber";
@@ -175,6 +177,9 @@ class Stabber extends Entity
         flash = 0;
         sp.color = 0xFFFFFF;
         
+        revealTime = 0;
+        hide();
+        
         this.guid = guid;
     }
     
@@ -185,6 +190,7 @@ class Stabber extends Entity
                 sp.state.setAnimationByName(0, animationName, loop);
             }
             animation = animationName;
+            loopedAnimation = loop;
         }
     }
     
@@ -233,9 +239,37 @@ class Stabber extends Entity
             }
         }
         
+        if (revealTime > 0)
+        {
+            revealTime = Math.max(0, revealTime - HXP.elapsed/Defs.REVEAL_TIME);
+            if (revealTime <= 0)
+            {
+                hide();
+            }
+        }
+        
         super.update();
         
+        if (!loopedAnimation && remaining <= 0)
+        {
+            state = Idle(Stand);
+        }
+        
         visible = true;
+    }
+    
+    function hide()
+    {
+        for(slot in sp.skeleton.slots) {
+            if(slot.data.name == "knife" || slot.data.name == "eyes")  {
+                slot.attachment = null;
+            }
+        }
+    }
+    
+    public function attack()
+    {
+        
     }
     
 #if server
