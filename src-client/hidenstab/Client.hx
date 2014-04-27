@@ -134,6 +134,7 @@ class Client
                         {
                             HXP.camera.x = char.x - Defs.WIDTH/2;
                             HXP.camera.y = char.y - Defs.HEIGHT/2;
+                            Sound.playSound("lose");
                         }
                         
                         newChar = true;
