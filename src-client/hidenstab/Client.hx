@@ -3,6 +3,7 @@ package hidenstab;
 import flash.net.Socket;
 import flash.utils.ByteArray;
 import flash.events.Event;
+import com.haxepunk.HXP;
 import hidenstab.Defs;
 import hidenstab.Stabber;
 
@@ -70,7 +71,7 @@ class Client
         {
             case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
-                id = buf.readUnsignedInt();
+                id = buf.readInt();
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
@@ -86,21 +87,24 @@ class Client
                         char = StabberPool.get(guid);
                         chars[guid] = char;
                         newChars.push(char);
+                        if (guid == id)
+                        {
+                            HXP.camera.x = char.x - Defs.WIDTH/2;
+                            HXP.camera.y = char.y - Defs.HEIGHT/2;
+                        }
                     }
                     
                     char.x = buf.readInt();
                     char.y = buf.readInt();
+                    var mx = buf.readByte();
+                    var my = buf.readByte();
                     if (guid != id)
                     {
-                        char.moving.x = buf.readByte();
-                        char.moving.y = buf.readByte();
+                        char.moving.x = mx;
+                        char.moving.y = my;
                     }
-                    var stateChanged = buf.readBoolean();
-                    if (stateChanged)
-                    {
-                        var newState:UInt = buf.readByte();
-                        char.state = Stabber.intToState.get(newState);
-                    }
+                    var newState:Int = buf.readByte();
+                    char.state = Stabber.intToState.get(newState);
                     
                     thisSeen.set(guid, true);
                 }
