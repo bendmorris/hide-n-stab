@@ -368,6 +368,19 @@ class Stabber extends Entity
         if (!pc)
         {
             // AI behaviors
+            switch(behaviorType)
+            {
+                case Loiter(i):
+                {
+                    state = Idle(i);
+                }
+                case WalkTo(wx, wy):
+                {
+                    moving.x = wx > x ? 1 : (wx < x : -1 : 0);
+                    moving.y = wy > y ? 1 : (wy < y : -1 : 0);
+                }
+            }
+            
             behaviorTime -= HXP.elapsed;
             if (behaviorTime <= 0)
             {
