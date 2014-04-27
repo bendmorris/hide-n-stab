@@ -68,8 +68,8 @@ class Client
             if (waitForBytes == 0)
             {
                 // get the coming message size
-                var b1:UInt = socket.readByte();
-                var b2:UInt = socket.readByte();
+                var b1:UInt = socket.readByte() & 0xFF;
+                var b2:UInt = socket.readByte() & 0xFF;
                 waitForBytes = (b1 << 8) + b2;
             }
             else
@@ -178,30 +178,20 @@ class Client
                     if (!thisSeen.exists(id))
                     {
                         var thisChar = chars.get(id);
-                        if (thisChar.state != Dead && id != this.id)
+                        if (thisChar.state != Dead)
                         {
                             thisChar.scene.remove(thisChar);
                             chars.remove(id);
                             StabberPool.recycle(thisChar);
-                            
-                            lastSeen.remove(id);
                         }
                     }
-                    else
-                    {
-                        lastSeen.remove(id);
-                    }
+                    
+                    lastSeen.remove(id);
                 }
                 
                 var emptyMap = lastSeen;
                 lastSeen = thisSeen;
                 thisSeen = emptyMap;
-                
-                for (i in thisSeen.keys())
-                {
-                    lastSeen[i] = thisSeen[i];
-                    thisSeen.remove(i);
-                }
             }
             default: {}
         }

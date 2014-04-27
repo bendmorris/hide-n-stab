@@ -477,7 +477,10 @@ class Stabber extends Entity
     
     public function attack()
     {
-        state = Attack(Std.random(2) == 0 ? Stab : Swing);
+        if (!dead && state != Dead)
+        {
+            state = Attack(Std.random(2) == 0 ? Stab : Swing);
+        }
     }
     
     public function talk()
