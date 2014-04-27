@@ -14,8 +14,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
 {
     static inline var UPDATE_FREQ:Float=1/60;
     
-    static var clients:Map<Guid, ClientData>;
-    static var chars:Map<Guid, Stabber>;
+    var clients:Map<Guid, ClientData>;
+    var clientCount:Int = 0;
+    var chars:Map<Guid, Stabber>;
+    var charCount:Int = 0;
     
     var lastUpdate:Float = 0;
     
@@ -101,6 +103,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 {
                     // this character is dead
                     chars.remove(id);
+                    charCount -= 1;
                 }
             }
             
@@ -111,12 +114,18 @@ class Server extends ThreadServer<ClientData, ByteArray>
         }
         
         lastUpdate = curTime;
+        
+        while (charCount < clientCount * 2)
+        {
+            spawnRandom();
+        }
     }
     
     override function clientConnected(s:Socket):ClientData
     {
         var c = new ClientData(s);
         clients.set(c.guid, c);
+        clientCount += 1;
         
         trace("Client connected: " + c.guid);
         
@@ -124,17 +133,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         char.x = Std.random(Defs.WORLD_WIDTH);
         char.y = Std.random(Defs.WORLD_HEIGHT);
         chars.set(c.guid, char);
+        charCount += 1;
         c.stabber = char;
         
         // add random non-pc characters
         for (i in 0 ... (2 + Std.random(3)))
         {
-            var rid = Defs.newGuid();
-            var char:Stabber = StabberPool.get(rid, false);
-            char.x = Std.random(Defs.WORLD_WIDTH);
-            char.y = Std.random(Defs.WORLD_HEIGHT);
-            char.facingRight = Std.random(2) == 0;
-            chars.set(rid, char);
+            spawnRandom();
         }
         
         var byteArray = Data.getByteArray();
@@ -156,11 +161,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         if (chars.exists(id))
         {
             chars.remove(id);
+            charCount -= 1;
         }
         
         if (clients.exists(id))
         {
             clients.remove(id);
+            clientCount -= 1;
         }
     }
     
@@ -173,5 +180,16 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var server = new Server();
         trace("Starting server (HOST=" + Defs.HOST + ", PORT=" + Defs.PORT + ")");
         server.run(Defs.HOST, Defs.PORT);
+    }
+    
+    function spawnRandom()
+    {
+        var rid = Defs.newGuid();
+        var char:Stabber = StabberPool.get(rid, false);
+        char.x = Std.random(Defs.WORLD_WIDTH);
+        char.y = Std.random(Defs.WORLD_HEIGHT);
+        char.facingRight = Std.random(2) == 0;
+        chars.set(rid, char);
+        charCount += 1;
     }
 }

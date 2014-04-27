@@ -55,7 +55,9 @@ class ClientData {
             byteArray.writeByte(Std.int(char.moving.x));
             byteArray.writeByte(Std.int(char.moving.y));
             byteArray.writeBoolean(char.facingRight);
-            byteArray.writeByte(Stabber.stateToInt.get(char.state));
+            var stateCode = Stabber.stateToInt.get(char.state);
+            if (char.state == Dead && char.pc) stateCode += 1;
+            byteArray.writeByte(stateCode);
         }
         
         nearbyCount = 0;
