@@ -10,6 +10,7 @@ class ClientData {
     public var stabber:Stabber;
     public var guid:Guid;
     
+    public var respawned:Bool=false;
     public var ready:Bool=true;
     
     public function new(s:Socket)
@@ -59,7 +60,7 @@ class ClientData {
             
             byteArray.writeByte(nearbyCount);
             
-            for (n in 0 ... nearbyCount)
+            for (n in 0 ... Std.int(Math.min(nearbyCount, 48)))
             {
                 var char = nearby[n];
                 var guid = char.guid;

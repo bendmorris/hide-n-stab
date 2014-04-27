@@ -76,10 +76,11 @@ class MainWindow extends Scene
                 
                 var curTime = Date.now().getTime();
                 
-                if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y || curTime - lastMovingSentTime > 0.25)
+                if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y || curTime - lastMovingSentTime > Defs.MOVE_SEND_FREQ)
                 {
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_MOVING);
+                    ba.writeInt(client.id);
                     ba.writeByte(Std.int(moving.x));
                     ba.writeByte(Std.int(moving.y));
                     Data.write(client.socket);
@@ -94,6 +95,7 @@ class MainWindow extends Scene
                     
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_ATTACK);
+                    ba.writeInt(client.id);
                     Data.write(client.socket);
                 }
                 if (Input.pressed("talk")) {
@@ -101,6 +103,7 @@ class MainWindow extends Scene
                     
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_TALK);
+                    ba.writeInt(client.id);
                     Data.write(client.socket);
                 }
                 

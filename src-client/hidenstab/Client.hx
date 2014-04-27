@@ -58,17 +58,19 @@ class Client
         socket.connect(host, port);
     }
     
-    var waitForBytes:Int = 0;
+    var waitForBytes:UInt = 0;
     
     public function update()
     {
-        //trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 2));
-        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 2))
+        trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
+        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 4))
         {
             if (waitForBytes == 0)
             {
                 // get the coming message size
-                waitForBytes = socket.readByte();
+                var b1:UInt = socket.readByte();
+                var b2:UInt = socket.readByte();
+                waitForBytes = (b1 << 8) + b2;
             }
             else
             {
@@ -87,7 +89,7 @@ class Client
                 waitForBytes = 0;
             }
             
-            //trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 1));
+            trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
         }
         
         /*if (socket.bytesAvailable == 0)
@@ -176,20 +178,30 @@ class Client
                     if (!thisSeen.exists(id))
                     {
                         var thisChar = chars.get(id);
-                        if (thisChar.state != Dead)
+                        if (thisChar.state != Dead && id != this.id)
                         {
                             thisChar.scene.remove(thisChar);
                             chars.remove(id);
                             StabberPool.recycle(thisChar);
+                            
+                            lastSeen.remove(id);
                         }
                     }
-                    
-                    lastSeen.remove(id);
+                    else
+                    {
+                        lastSeen.remove(id);
+                    }
                 }
                 
                 var emptyMap = lastSeen;
                 lastSeen = thisSeen;
                 thisSeen = emptyMap;
+                
+                for (i in thisSeen.keys())
+                {
+                    lastSeen[i] = thisSeen[i];
+                    thisSeen.remove(i);
+                }
             }
             default: {}
         }

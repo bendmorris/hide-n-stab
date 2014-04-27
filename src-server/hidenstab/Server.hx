@@ -29,6 +29,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
         chars = new Map();
     }
     
+    static inline var headerLength:Int = 2;
+    
     override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
     {
         var bytesConsumed = 0;
@@ -36,11 +38,14 @@ class Server extends ThreadServer<ClientData, ByteArray>
         while (len > 0)
         {
             var ba:ByteArray;
-            var waitFor = buf.get(pos);
+            //var waitFor = ByteArray.fromBytes(buf.sub(pos, headerLength)).readInt();
+            var b1:UInt = buf.get(pos);
+            var b2:UInt = buf.get(pos+1);
+            var waitFor:UInt = (b1 << 8) + b2;
             
             if (len > waitFor)
             {
-                var sub = buf.sub(pos+1, waitFor);
+                var sub = buf.sub(pos+headerLength, waitFor);
                 ba = ByteArray.fromBytes(sub);
                 //trace("msg length: " + waitFor);
                 
@@ -48,10 +53,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 
                 readMessage(c, ba);
                 
-                bytesConsumed += waitFor + 1;
+                bytesConsumed += waitFor + headerLength;
                 
-                pos += waitFor + 1;
-                len -= waitFor + 1;
+                pos += waitFor + headerLength;
+                len -= waitFor + headerLength;
             }
             else
             {
@@ -71,8 +76,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         {
             var msgType = msg.readByte();
             
-            trace(msgType);
-            
             switch(msgType)
             {
                 /*case Defs.MSG_SEND_CHARS:
@@ -83,18 +86,25 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 case Defs.MSG_SEND_MOVING:
                 {
                     // set moving
-                    char.moving.x = msg.readByte();
-                    char.moving.y = msg.readByte();
+                    var senderId = msg.readInt();
+                    
+                    if (id == senderId)
+                    {
+                        char.moving.x = msg.readByte();
+                        char.moving.y = msg.readByte();
+                    }
                 }
                 case Defs.MSG_SEND_ATTACK:
                 {
                     // attack
-                    char.attack();
+                    var senderId = msg.readInt();
+                    if (id == senderId) char.attack();
                 }
                 case Defs.MSG_SEND_TALK:
                 {
-                    // attack
-                    char.talk();
+                    // talk
+                    var senderId = msg.readInt();
+                    if (id == senderId) char.talk();
                 }
                 default: {}
             }
@@ -170,6 +180,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         client.guid = newGuid;
         clients.set(client.guid, client);
         spawn(client);
+        client.ready = true;
     }
     
     override function clientConnected(s:Socket):ClientData

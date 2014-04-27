@@ -7,8 +7,8 @@ class Defs
     public static inline var MAX_INT=536870912;
     public static inline var MSG_LEN=256;
 
-//    public static var HOST="localhost";
-    public static var HOST="54.244.244.60";
+    public static var HOST="localhost";
+//    public static var HOST="54.244.244.60";
     public static var PORT=27278;
     
     public static inline var SCALE:Int=2;
@@ -29,6 +29,7 @@ class Defs
     public static inline var REVEAL_TIME:Float=3;
     public static inline var Y_SPEED:Float=0.67;
     public static inline var SERVER_UPDATE_FREQ:Float=1/20;
+    public static inline var MOVE_SEND_FREQ:Float=0.33;
     public static inline var GRADUAL_MOVE_TIME:Float=SERVER_UPDATE_FREQ;
     
     public static inline var MSG_SEND_GUID=0;
