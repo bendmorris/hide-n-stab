@@ -12,7 +12,7 @@ import hidenstab.Stabber;
 
 class Server extends ThreadServer<ClientData, ByteArray>
 {
-    static inline var UPDATE_FREQ:Float=1/30;
+    static inline var UPDATE_FREQ:Float=1/60;
     
     static var clients:Map<Guid, ClientData>;
     static var chars:Map<Guid, Stabber>;
