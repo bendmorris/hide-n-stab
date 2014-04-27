@@ -365,6 +365,7 @@ class Stabber extends Entity
             }
         }
         
+#if server
         if (!pc)
         {
             // AI behaviors
@@ -372,6 +373,7 @@ class Stabber extends Entity
             {
                 case Loiter(i):
                 {
+                    moving.x = moving.y = 0;
                     state = Idle(i);
                 }
                 case WalkTo(wx, wy):
@@ -387,6 +389,7 @@ class Stabber extends Entity
                 randomBehavior();
             }
         }
+#end
         
         layer = Std.int((Defs.WORLD_HEIGHT - y) / 4);
         
