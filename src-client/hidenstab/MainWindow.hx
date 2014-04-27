@@ -55,6 +55,8 @@ class MainWindow extends Scene
             
             if (s != null)
             {
+                trace(s.x + ',' + s.y);
+                
                 if (Input.pressed("left")) moving.x = -1;
                 if (Input.pressed("right")) moving.x = 1;
                 if (Input.pressed("up")) moving.y = -1;
