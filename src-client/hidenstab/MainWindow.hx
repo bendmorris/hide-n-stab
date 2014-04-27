@@ -29,7 +29,10 @@ class MainWindow extends Scene
     
     public var killLabel:BitmapText;
     public var failLabel:BitmapText;
+    public var contLabel:BitmapText;
     public var scoreLabel:BitmapText;
+    
+    public var needRespawn:Bool = false;
     
     override public function begin()
     {
@@ -49,6 +52,7 @@ class MainWindow extends Scene
         Input.define("right", [Key.RIGHT, Key.D]);
         Input.define("attack", [Key.SPACE, Key.X, Key.K]);
         Input.define("talk", [Key.Z, Key.L]);
+        Input.define("continue", [Key.C]);
         
         Client.init();
         Client.current.window = this;
@@ -60,12 +64,16 @@ class MainWindow extends Scene
                                    Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
                                    0, 0, FONT_OPTIONS);
         killLabel.color = 0xFF0000;
+        contLabel = new BitmapText("You were killed! Press C to continue.",
+                                   Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
+                                   0, 0, FONT_OPTIONS);
+        contLabel.color = 0xFF0000;
         scoreLabel = new BitmapText("Score: 0",
                                    4, -1,
                                    0, 0, FONT_OPTIONS);
         scoreLabel.color = 0xFF0000;
         
-        for (g in [killLabel, failLabel])
+        for (g in [killLabel, failLabel, contLabel])
         {
             g.alpha = 0;
             g.visible = false;
@@ -73,7 +81,7 @@ class MainWindow extends Scene
             g.x -= g.textWidth/2;
         }
         
-        for (g in [killLabel, failLabel, scoreLabel])
+        for (g in [killLabel, failLabel, contLabel, scoreLabel])
         {
             g.scrollX = g.scrollY = 0;
             var e = new Entity(0, 0, g);
@@ -121,7 +129,16 @@ class MainWindow extends Scene
             }
         }
         
-        if (client.id != -1)
+        if (needRespawn)
+        {
+            if (Input.pressed("continue"))
+            {
+                var ba = Data.getByteArray();
+                ba.writeByte(Defs.MSG_SEND_RESPAWN);
+                Data.write(client.socket);
+            }
+        }
+        else if (client.id != -1)
         {
             var s:Stabber = client.chars.get(client.id);
             

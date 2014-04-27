@@ -111,6 +111,7 @@ class Client
                 id = buf.readInt();
                 score = 0;
                 updateScoreLabel();
+                HXP.screen.shake(4, 0.2);
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
@@ -165,6 +166,9 @@ class Client
                         if (guid == id)
                         {
                             HXP.screen.shake(4, 0.2);
+                            window.contLabel.alpha = 1;
+                            window.contLabel.visible = true;
+                            window.needRespawn = true;
                         }
                     }
                     char.state = Stabber.intToState.get(newState);

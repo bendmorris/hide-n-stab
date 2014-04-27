@@ -15,6 +15,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
     static inline var UPDATE_FREQ:Float=Defs.SERVER_UPDATE_FREQ;
     
     var clients:Map<Guid, ClientData>;
+    var waitForRespawn:Map<Guid, ClientData>;
     var clientCount:Int = 0;
     var chars:Map<Guid, Stabber>;
     var charCount:Int = 0;
@@ -26,6 +27,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         super();
         updateTime = UPDATE_FREQ;
         clients = new Map();
+        waitForRespawn = new Map();
         chars = new Map();
     }
     
@@ -106,6 +108,14 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     var senderId = msg.readInt();
                     if (id == senderId) char.talk();
                 }
+                case Defs.MSG_SEND_RESPAWN:
+                {
+                    // respawn
+                    if (waitForRespawn.exists(id))
+                    {
+                        respawn(id);
+                    }
+                }
                 default: {}
             }
         }
@@ -165,7 +175,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     
                     if (char.pc)
                     {
-                        respawn(id);
+                        dead(id);
                     }
                     
                     StabberPool.recycle(char);
@@ -181,10 +191,17 @@ class Server extends ThreadServer<ClientData, ByteArray>
         }
     }
     
-    function respawn(guid:Guid)
+    function dead(guid:Guid)
     {
         var client = clients.get(guid);
         clients.remove(guid);
+        waitForRespawn[guid] = client;
+    }
+    
+    function respawn(guid:Guid)
+    {
+        var client = waitForRespawn.get(guid);
+        waitForRespawn.remove(guid);
         var newGuid = getGuid();
         trace(guid + " respawn as " + newGuid);
         client.guid = newGuid;
