@@ -98,7 +98,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var char:Stabber = StabberPool.get(c.guid, true);
         char.x = Std.random(Defs.WORLD_WIDTH);
         char.y = Std.random(Defs.WORLD_HEIGHT);
-        char.facingRight = Std.random(2) == 0;
         chars.set(c.guid, char);
         c.stabber = char;
         

@@ -82,6 +82,8 @@ class Client
                     var guid = buf.readInt();
                     var char:Stabber = chars.get(guid);
                     
+                    var newChar:Bool = false;
+                    
                     if (char == null)
                     {
                         char = StabberPool.get(guid);
@@ -92,10 +94,22 @@ class Client
                             HXP.camera.x = char.x - Defs.WIDTH/2;
                             HXP.camera.y = char.y - Defs.HEIGHT/2;
                         }
+                        
+                        newChar = true;
                     }
                     
-                    char.x = buf.readUnsignedInt();
-                    char.y = buf.readUnsignedInt();
+                    var x = buf.readUnsignedInt();
+                    var y = buf.readUnsignedInt();
+                    if (newChar)
+                    {
+                        char.x = x;
+                        char.y = y;
+                    }
+                    else
+                    {
+                        char.gradualMove(x, y);
+                    }
+                    
                     var mx = buf.readByte();
                     var my = buf.readByte();
                     var dir = buf.readBoolean();

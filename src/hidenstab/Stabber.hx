@@ -44,6 +44,12 @@ enum StabberState
     Dead;
 }
 
+enum BehaviorType
+{
+    Loiter(idleType:IdleType);
+    WalkTo(x:Float, y:Float);
+}
+
 
 class StabberPool
 {
@@ -110,9 +116,37 @@ class Stabber extends Entity
     
     public var moving:Point;
     public var facingRight:Bool=true;
+    var moveToward:Point;
+    var originalPos:Point;
+    var moveTowardTimer:Float=0;
     var flash:Float=0;
     var loopedAnimation:Bool=false;
     var animationTimer:Float = 0;
+    
+    public var behaviorType(default, set):BehaviorType;
+    var behaviorTime:Float = 0;
+    function set_behaviorType(b:BehaviorType)
+    {
+        behaviorTime = 5 * Math.random();
+        return behaviorType = b;
+    }
+    
+    function randomBehavior()
+    {
+        switch(Std.random(2))
+        {
+            case 0:
+            {
+                behaviorType = Loiter(Std.random(3) == 0 ? Talk : Stand);
+            }
+            case 1:
+            {
+                var targetX = x + Std.random(Defs.WIDTH) * (Math.random() * 2 - 1);
+                var targetY = y + Std.random(Defs.HEIGHT) * (Math.random() * 2 - 1);
+                behaviorType = WalkTo(targetX, targetY);
+            }
+        }
+    }
     
     public var state(default, set):StabberState;
     function set_state(s:StabberState)
@@ -149,6 +183,8 @@ class Stabber extends Entity
         super();
         
         moving = new Point();
+        moveToward = new Point();
+        originalPos = new Point();
         
 #if !server
         if (loader == null)
@@ -189,7 +225,7 @@ class Stabber extends Entity
     {
         state = Idle(Stand);
         
-        facingRight = true;
+        facingRight = Std.random(2) == 0;
         
 #if !server
         visible = false;
@@ -203,9 +239,16 @@ class Stabber extends Entity
         animationTimer = 0;
         
         moving.x = moving.y = 0;
+        moveToward.x = moveToward.y = -1;
+        originalPos.x = originalPos.y = -1;
         this.pc = pc;
         
         this.guid = guid;
+        
+        if (!pc)
+        {
+            behaviorType = Loiter(Stand);
+        }
     }
     
     public var animation:String;
@@ -248,6 +291,15 @@ class Stabber extends Entity
     }
 #end
     
+    public function gradualMove(x:Float, y:Float)
+    {
+        originalPos.x = this.x;
+        originalPos.y = this.y;
+        moveToward.x = x;
+        moveToward.y = y;
+        moveTowardTimer = 0;
+    }
+    
     public override function update()
     {
         if (flash > 0)
@@ -260,6 +312,17 @@ class Stabber extends Entity
         
         if (visible)
         {
+            if (moveToward.x != -1 && moveToward.y != -1)
+            {
+                moveTowardTimer += HXP.elapsed / Defs.GRADUAL_MOVE_TIME;
+                x = HXP.lerp(originalPos.x, moveToward.x, moveTowardTimer);
+                y = HXP.lerp(originalPos.y, moveToward.y, moveTowardTimer);
+                if (moveTowardTimer == 1)
+                {
+                    moveToward.x = moveToward.y = -1;
+                }
+            }
+            
             switch(state)
             {
                 case Dead:
@@ -302,7 +365,17 @@ class Stabber extends Entity
             }
         }
         
-        //layer = Std.int((Defs.WORLD_HEIGHT - y) / 4);
+        if (!pc)
+        {
+            // AI behaviors
+            behaviorTime -= HXP.elapsed;
+            if (behaviorTime <= 0)
+            {
+                randomBehavior();
+            }
+        }
+        
+        layer = Std.int((Defs.WORLD_HEIGHT - y) / 4);
         
         if (revealTime > 0)
         {
