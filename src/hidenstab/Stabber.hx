@@ -366,9 +366,6 @@ class Stabber extends Entity
                         {
                             y += moving.y * spd * HXP.elapsed * Defs.MOVE_PER_SEC * Defs.Y_SPEED;
                         }
-                        
-                        x = HXP.clamp(x, width, Defs.WORLD_WIDTH-width);
-                        y = HXP.clamp(y, height, Defs.WORLD_HEIGHT-height);
                     }
                 }
 #if server
@@ -384,6 +381,9 @@ class Stabber extends Entity
                 default: {}
             }
         }
+        
+        x = HXP.clamp(x, width, Defs.WORLD_WIDTH-width);
+        y = HXP.clamp(y, height, Defs.WORLD_HEIGHT-height);
         
 #if server
         if (!pc && state != Dead && !dead)
