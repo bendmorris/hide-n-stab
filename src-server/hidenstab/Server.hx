@@ -48,7 +48,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         {
             case Defs.MSG_SEND_MOVING:
             {
-                trace(char.guid + ' moving');
                 // set moving
                 char.moving.x = msg.readByte();
                 char.moving.y = msg.readByte();
@@ -56,13 +55,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
             case Defs.MSG_SEND_ATTACK:
             {
                 // attack
-                trace(char.guid + ' attack');
                 char.attack();
             }
             case Defs.MSG_SEND_TALK:
             {
                 // attack
-                trace(char.guid + ' talk');
                 char.talk();
             }
             default: {}

@@ -46,7 +46,6 @@ class MainWindow extends Scene
         while (client.newChars.length > 0)
         {
             var newChar = client.newChars.pop();
-            trace('a new char: ' + newChar.guid);
             add(newChar);
         }
         
