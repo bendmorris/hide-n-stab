@@ -10,8 +10,9 @@ harmless bundles of clothes.
 Your goal is to kill other players without being killed yourself. You can only 
 kill someone by stabbing them from behind.
 
-Whenever you attack, your eyes will glow and others will see you as a human for 
-a short time, so be careful and stay hidden until the time is right to strike.
+Whenever you attack, your eyes will glow and your knife will be visible, 
+revealing you to other players as a human for a short time, so be careful and 
+stay hidden until the time is right to strike.
 
 ![a successful kill](https://raw.githubusercontent.com/bendmorris/hide-n-stab/master/promo/Screenshot%20-%2004272014%20-%2003:32:13%20PM.png)
 This game was created by Ben Morris (<ben@bendmorris.com>) for Ludum Dare 29, 
