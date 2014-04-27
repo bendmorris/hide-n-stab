@@ -125,10 +125,14 @@ class Stabber extends Entity
                     case Talk: setAnimation("talk");
                 };
                 case Walk: setAnimation("walk");
-                case Attack(a): switch(a) {
-                    case Swing: setAnimation("swing", false);
-                    case Stab: setAnimation("stab", false);
-                };
+                case Attack(a): {
+                    revealTime = 1;
+                    
+                    switch(a) {
+                        case Swing: setAnimation("swing", false);
+                        case Stab: setAnimation("stab", false);
+                    };
+                }
                 case Dead: {
                     setAnimation("dead", false);
                     flash = 1;
@@ -341,7 +345,6 @@ class Stabber extends Entity
     
     public function attack()
     {
-        revealTime = 1;
         state = Attack(Std.random(2) == 0 ? Stab : Swing);
     }
     
