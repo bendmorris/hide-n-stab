@@ -73,11 +73,16 @@ class Client
             {
                 // read the complete message
                 socket.readBytes(buf, 0, waitForBytes);
+                buf.uncompress();
                 readMessage(buf);
                 buf.clear();
                 waitForBytes = 0;
             }
         }
+        
+        var ba = Data.getByteArray();
+        ba.writeByte(Defs.MSG_SEND_CHARS);
+        Data.write(socket);
     }
     
     var lastSeen:Map<Int, Bool>;

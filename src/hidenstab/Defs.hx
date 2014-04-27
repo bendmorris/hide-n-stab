@@ -7,7 +7,8 @@ class Defs
     public static inline var MAX_INT=536870912;
     public static inline var MSG_LEN=256;
 
-    public static var HOST="localhost";
+//    public static var HOST="localhost";
+    public static var HOST="54.244.244.60";
     public static var PORT=27278;
     
     public static inline var SCALE:Int=2;

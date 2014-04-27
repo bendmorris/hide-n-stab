@@ -45,26 +45,35 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var id = c.guid;
         var char = chars.get(id);
         
-        var msgType = msg.readByte();
-        switch(msgType)
+        while (msg.bytesAvailable > 0)
         {
-            case Defs.MSG_SEND_MOVING:
+            var msgType = msg.readByte();
+            
+            switch(msgType)
             {
-                // set moving
-                char.moving.x = msg.readByte();
-                char.moving.y = msg.readByte();
+                case Defs.MSG_SEND_CHARS:
+                {
+                    // send update
+                    c.update(chars);
+                }
+                case Defs.MSG_SEND_MOVING:
+                {
+                    // set moving
+                    char.moving.x = msg.readByte();
+                    char.moving.y = msg.readByte();
+                }
+                case Defs.MSG_SEND_ATTACK:
+                {
+                    // attack
+                    char.attack();
+                }
+                case Defs.MSG_SEND_TALK:
+                {
+                    // attack
+                    char.talk();
+                }
+                default: {}
             }
-            case Defs.MSG_SEND_ATTACK:
-            {
-                // attack
-                char.attack();
-            }
-            case Defs.MSG_SEND_TALK:
-            {
-                // attack
-                char.talk();
-            }
-            default: {}
         }
     }
     
@@ -114,10 +123,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 }
             }
             
-            for (client in clients.iterator())
+            /*for (client in clients.iterator())
             {
+                
                 client.update(chars);
-            }
+            }*/
         }
         
         lastUpdate = curTime;
