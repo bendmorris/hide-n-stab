@@ -338,13 +338,6 @@ class Stabber extends Entity
             
             switch(state)
             {
-                case Dead:
-                {
-#if !server
-                    _scene.remove(this);
-                    StabberPool.recycle(this);
-#end
-                }
                 case Idle(i):
                 {
                     if (moving.x != 0 || moving.y != 0) state = Walk;
@@ -390,7 +383,7 @@ class Stabber extends Entity
         }
         
 #if server
-        if (!pc)
+        if (!pc && state != Dead && !dead)
         {
             // AI behaviors
             switch(behaviorType)
@@ -465,6 +458,15 @@ class Stabber extends Entity
             }
         }
         
+        visible = true;
+        
+#if !server
+        if (dead)
+        {
+            _scene.remove(this);
+            StabberPool.recycle(this);
+        }
+#end
         visible = true;
     }
     
