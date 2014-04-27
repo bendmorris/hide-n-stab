@@ -162,6 +162,7 @@ class Client
                     var newState:Int = buf.readByte();
                     if (newState == 6)
                     {
+                        
                         char.pc = true;
                         if (guid == id)
                         {
