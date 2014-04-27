@@ -213,7 +213,6 @@ class Client
                 else
                 {
                     window.failLabel.alpha = 1;
-                    Sound.playSound("scatter");
                 }
             }
             default: {}

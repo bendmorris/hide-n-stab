@@ -54,4 +54,4 @@ sounds: $(patsubst assets/sound/%.wav, assets/sound/%.mp3, $(wildcard assets/sou
 
 %.mp3: %.wav
 	rm -f $@
-	ffmpeg -i $< -acodec libmp3lame -ab 48k -ar 11025 $@
+	ffmpeg -i $< -acodec libmp3lame -ab 96k -ar 11025 $@
