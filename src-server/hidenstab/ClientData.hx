@@ -10,6 +10,8 @@ class ClientData {
     public var stabber:Stabber;
     public var guid:Guid;
     
+    public var ready:Bool=true;
+    
     public function new(s:Socket)
     {
         socket = s;
