@@ -9,7 +9,8 @@ the surface - some are other players like yourself, while others are only
 harmless bundles of clothes.
 
 Your goal is to kill other players without being killed yourself. You can only 
-kill someone by stabbing them from behind.
+kill someone by stabbing them from behind. You get points for killing other 
+players, and nothing for killing AI-controlled cloaks.
 
 Whenever you attack, your eyes will glow and your knife will be visible, 
 revealing you to other players as a human for a short time, so be careful and 
