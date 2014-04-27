@@ -26,7 +26,7 @@ class Sound
     public static function init() {
         audio = new Map<String, Sfx>();
         
-        var sounds = ['attack', 'scatter', 'kill'];
+        var sounds = ['attack', 'kill', 'lose', 'score', 'start'];
         for (file in sounds) {
             loadSound(file);
         }
