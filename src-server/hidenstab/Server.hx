@@ -157,8 +157,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         
         spawn(c);
         
-        s.output.bigEndian = true;
-        
         return c;
     }
     

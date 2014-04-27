@@ -47,7 +47,7 @@ class Client
     public function connect()
     {
         socket = new Socket();
-        socket.endian = flash.utils.Endian.BIG_ENDIAN;
+        socket.endian = flash.utils.Endian.LITTLE_ENDIAN;
         //socket.setBlocking(false);
 #if flash
         var host = Defs.HOST;
@@ -62,7 +62,7 @@ class Client
     
     public function update()
     {
-        while (Std.int(socket.bytesAvailable) > waitForBytes)
+        if (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 1))
         {
             if (waitForBytes == 0)
             {
