@@ -30,10 +30,14 @@ class Client
     
     public var socket:Socket;
     
+    public var score:Int = 0;
+    
     public var newChars:Array<Stabber>;
     public var chars:Map<Int, Stabber>;
     public var id:Int=-1;
     var buf:ByteArray;
+    
+    public var window:MainWindow;
     
     public function new()
     {
@@ -105,6 +109,8 @@ class Client
             case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
                 id = buf.readInt();
+                score = 0;
+                updateScoreLabel();
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
@@ -186,7 +192,28 @@ class Client
                 lastSeen = thisSeen;
                 thisSeen = emptyMap;
             }
+            case Defs.MSG_SEND_KILL_SUCCESS, Defs.MSG_SEND_KILL_FAIL:
+            {
+                var success = msgType == Defs.MSG_SEND_KILL_SUCCESS;
+                
+                if (success)
+                {
+                    score += 1;
+                    window.killLabel.alpha = 1;
+                    updateScoreLabel();
+                }
+                else
+                {
+                    window.failLabel.alpha = 1;
+                }
+            }
             default: {}
         }
+    }
+    
+    function updateScoreLabel()
+    {
+        window.scoreLabel.text = "Score: " + score;
+        window.scoreLabel.scale = 2;
     }
 }

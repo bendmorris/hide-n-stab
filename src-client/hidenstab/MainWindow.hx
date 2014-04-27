@@ -4,6 +4,7 @@ import flash.geom.Point;
 import com.haxepunk.HXP;
 import com.haxepunk.Scene;
 import com.haxepunk.Entity;
+import com.haxepunk.graphics.BitmapText;
 import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
 import hidenstab.Backdrop;
@@ -12,12 +13,23 @@ import hidenstab.Stabber;
 
 class MainWindow extends Scene
 {
+    public static inline var FONT_NAME='font/perfect_dos.fnt';
+    public static inline var FONT_SIZE:Int=24;
+    public static inline var FONT_COLOR:Int=0xFFFFFF;
+    public static var FONT_OPTIONS={font:FONT_NAME, size:FONT_SIZE, color:FONT_COLOR};
+    
+    static inline var TEXT_FADE_RATE:Float=0.5;
+    
     var moving:Point;
     
     var lastMovingSent:Point;
     var lastMovingSentTime:Float=0;
     
     var seenDead:Map<Int, Bool>;
+    
+    public var killLabel:BitmapText;
+    public var failLabel:BitmapText;
+    public var scoreLabel:BitmapText;
     
     override public function begin()
     {
@@ -39,11 +51,64 @@ class MainWindow extends Scene
         Input.define("talk", [Key.Z, Key.L]);
         
         Client.init();
+        Client.current.window = this;
+        
+        failLabel = new BitmapText("That wasn't a real person...",
+                                   Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
+                                   0, 0, FONT_OPTIONS);
+        killLabel = new BitmapText("You killed a real person!",
+                                   Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
+                                   0, 0, FONT_OPTIONS);
+        killLabel.color = 0xFF0000;
+        scoreLabel = new BitmapText("Score: 0",
+                                   4, -1,
+                                   0, 0, FONT_OPTIONS);
+        scoreLabel.color = 0xFF0000;
+        
+        for (g in [killLabel, failLabel])
+        {
+            g.alpha = 0;
+            g.visible = false;
+            g.computeTextSize();
+            g.x -= g.textWidth/2;
+        }
+        
+        for (g in [killLabel, failLabel, scoreLabel])
+        {
+            g.scrollX = g.scrollY = 0;
+            var e = new Entity(0, 0, g);
+            e.layer = -1;
+            add(e);
+        }
     }
     
     override public function update()
     {
         var client = Client.current;
+        
+        if (killLabel.alpha > 0)
+        {
+            killLabel.visible = true;
+            killLabel.alpha -= HXP.elapsed/TEXT_FADE_RATE/2;
+            if (killLabel.alpha <= 0)
+            {
+                killLabel.visible = false;
+            }
+        }
+        if (failLabel.alpha > 0)
+        {
+            failLabel.visible = true;
+            failLabel.alpha -= HXP.elapsed/TEXT_FADE_RATE/2;
+            if (failLabel.alpha <= 0)
+            {
+                failLabel.visible = false;
+            }
+        }
+        
+        if (scoreLabel.scale > 1)
+        {
+            scoreLabel.scale = Math.max(1, scoreLabel.scale - HXP.elapsed/TEXT_FADE_RATE);
+        }
         
         client.update();
         

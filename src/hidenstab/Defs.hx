@@ -37,7 +37,8 @@ class Defs
     public static inline var MSG_SEND_MOVING=2;
     public static inline var MSG_SEND_ATTACK=3;
     public static inline var MSG_SEND_TALK=4;
-    public static inline var MSG_TERMINATOR=127;
+    public static inline var MSG_SEND_KILL_SUCCESS=5;
+    public static inline var MSG_SEND_KILL_FAIL=6;
     
     public static function init()
     {
@@ -45,12 +46,7 @@ class Defs
     
     public static function newGuid():Guid
     {
-        var g = MSG_TERMINATOR;
-        
-        while (g == MSG_TERMINATOR)
-        {
-            g = Std.random(MAX_INT);
-        }
+        var g = Std.random(MAX_INT);
         
         return g;
     }

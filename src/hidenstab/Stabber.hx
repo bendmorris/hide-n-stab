@@ -495,10 +495,19 @@ class Stabber extends Entity
         };
     }
     
-    public function kill(target:Stabber)
+    public function kill(target:Stabber):Bool
     {
-        if (target.pc) score += 1;
+        var killedPc = false;
+        
+        if (target.pc)
+        {
+            score += 1;
+            killedPc = true;
+        }
+        
         target.die();
+        
+        return killedPc;
     }
     
     public function die()
