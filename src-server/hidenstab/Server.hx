@@ -12,7 +12,7 @@ import hidenstab.Stabber;
 
 class Server extends ThreadServer<ClientData, ByteArray>
 {
-    static inline var UPDATE_FREQ:Float=1/30;
+    static inline var UPDATE_FREQ:Float=Defs.SERVER_UPDATE_FREQ;
     
     var clients:Map<Guid, ClientData>;
     var clientCount:Int = 0;
@@ -51,11 +51,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
             
             switch(msgType)
             {
-                case Defs.MSG_SEND_CHARS:
+                /*case Defs.MSG_SEND_CHARS:
                 {
                     // send update
                     c.update(chars);
-                }
+                }*/
                 case Defs.MSG_SEND_MOVING:
                 {
                     // set moving
@@ -123,11 +123,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 }
             }
             
-            /*for (client in clients.iterator())
+            for (client in clients.iterator())
             {
                 
                 client.update(chars);
-            }*/
+            }
         }
         
         lastUpdate = curTime;
@@ -142,7 +142,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
     {
         var client = clients.get(guid);
         clients.remove(guid);
-        var newGuid = Defs.newGuid();
+        var newGuid = getGuid();
         trace(guid + " respawn as " + newGuid);
         client.guid = newGuid;
         clients.set(client.guid, client);
@@ -215,14 +215,25 @@ class Server extends ThreadServer<ClientData, ByteArray>
         server.run(Defs.HOST, Defs.PORT);
     }
     
+    function getGuid()
+    {
+        var newGuid:Guid;
+        do
+        {
+            newGuid = Defs.newGuid();
+        } while (chars.exists(newGuid) || clients.exists(newGuid));
+        return newGuid;
+    }
+    
     function spawnRandom()
     {
-        var rid = Defs.newGuid();
-        var char:Stabber = StabberPool.get(rid, false);
+        
+        var newGuid = getGuid();
+        var char:Stabber = StabberPool.get(newGuid, false);
         char.x = Std.random(Defs.WORLD_WIDTH);
         char.y = Std.random(Defs.WORLD_HEIGHT);
         char.facingRight = Std.random(2) == 0;
-        chars.set(rid, char);
+        chars.set(newGuid, char);
         charCount += 1;
     }
 }

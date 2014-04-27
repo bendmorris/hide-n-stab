@@ -15,6 +15,7 @@ class MainWindow extends Scene
     var moving:Point;
     
     var lastMovingSent:Point;
+    var lastMovingSentTime:Float=0;
     
     var seenDead:Map<Int, Bool>;
     
@@ -73,7 +74,9 @@ class MainWindow extends Scene
                 s.moving.x = moving.x;
                 s.moving.y = moving.y;
                 
-                if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y)
+                var curTime = Date.now().getTime();
+                
+                if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y || curTime - lastMovingSentTime > 0.25)
                 {
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_MOVING);
@@ -83,6 +86,7 @@ class MainWindow extends Scene
                     
                     lastMovingSent.x = moving.x;
                     lastMovingSent.y = moving.y;
+                    lastMovingSentTime = curTime;
                 }
                 
                 if (Input.pressed("attack")) {

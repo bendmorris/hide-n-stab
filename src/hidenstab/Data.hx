@@ -11,6 +11,7 @@ import sys.net.Socket;
 class Data
 {
     static var byteArray:ByteArray = new ByteArray();
+    static var outByteArray:ByteArray = new ByteArray();
     
     public static function getByteArray()
     {
@@ -28,10 +29,14 @@ class Data
         socket.writeBytes(byteArray);
         socket.flush();
 #else
+    outByteArray.clear();
     #if server
-        socket.output.prepare(l+1);
-        socket.output.writeByte(l);
+        outByteArray.writeByte(l & 0xFF);
+        //outByteArray.writeByte((l & 0xFF00) >> 8);
+        //outByteArray.writeByte(l & 0xFF);
     #end
+        outByteArray.writeBytes(byteArray);
+        socket.output.prepare(Std.int(outByteArray.length));
         socket.output.write(byteArray);
         socket.output.flush();
 #end

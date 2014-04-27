@@ -62,7 +62,8 @@ class Client
     
     public function update()
     {
-        if (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 1))
+        trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 2));
+        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 2))
         {
             if (waitForBytes == 0)
             {
@@ -72,17 +73,29 @@ class Client
             else
             {
                 // read the complete message
-                socket.readBytes(buf, 0, waitForBytes);
-                //buf.uncompress();
-                readMessage(buf);
+                try
+                {
+                    socket.readBytes(buf, 0, waitForBytes);
+                    //buf.uncompress();
+                    readMessage(buf);
+                }
+                catch(e:Dynamic)
+                {
+                    
+                }
                 buf.clear();
                 waitForBytes = 0;
             }
+            
+            trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 1));
         }
         
-        var ba = Data.getByteArray();
-        ba.writeByte(Defs.MSG_SEND_CHARS);
-        Data.write(socket);
+        /*if (socket.bytesAvailable == 0)
+        {
+            var ba = Data.getByteArray();
+            ba.writeByte(Defs.MSG_SEND_CHARS);
+            Data.write(socket);
+        }*/
     }
     
     var lastSeen:Map<Int, Bool>;
@@ -123,8 +136,8 @@ class Client
                         newChar = true;
                     }
                     
-                    var x = buf.readUnsignedInt();
-                    var y = buf.readUnsignedInt();
+                    var x = buf.readFloat();
+                    var y = buf.readFloat();
                     if (newChar || Math.max(Math.abs(char.x-x), Math.abs(char.y-y)) > char.width)
                     {
                         char.x = x;
@@ -138,7 +151,7 @@ class Client
                     var mx = buf.readByte();
                     var my = buf.readByte();
                     var dir = buf.readBoolean();
-                    if (guid != id)
+                    if (true)//(guid != id)
                     {
                         char.moving.x = mx;
                         char.moving.y = my;

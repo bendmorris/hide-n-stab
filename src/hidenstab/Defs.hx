@@ -28,7 +28,8 @@ class Defs
     public static inline var RUN_MULT:Float=2.5;
     public static inline var REVEAL_TIME:Float=3;
     public static inline var Y_SPEED:Float=0.67;
-    public static inline var GRADUAL_MOVE_TIME:Float=0.1;
+    public static inline var SERVER_UPDATE_FREQ:Float=1/20;
+    public static inline var GRADUAL_MOVE_TIME:Float=SERVER_UPDATE_FREQ;
     
     public static inline var MSG_SEND_GUID=0;
     public static inline var MSG_SEND_CHARS=1;

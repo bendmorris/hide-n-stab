@@ -63,8 +63,8 @@ class ClientData {
                 var guid = char.guid;
                 
                 byteArray.writeInt(guid);
-                byteArray.writeUnsignedInt(Std.int(char.x));
-                byteArray.writeUnsignedInt(Std.int(char.y));
+                byteArray.writeFloat(char.x);
+                byteArray.writeFloat(char.y);
                 byteArray.writeByte(Std.int(char.moving.x));
                 byteArray.writeByte(Std.int(char.moving.y));
                 byteArray.writeBoolean(char.facingRight);
