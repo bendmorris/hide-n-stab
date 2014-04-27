@@ -21,7 +21,7 @@ class Data
     public static function write(socket:Socket)
     {
 #if server
-        byteArray.compress();
+        //byteArray.compress();
 #end
         var l = Std.int(byteArray.length);
 #if flash

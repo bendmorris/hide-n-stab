@@ -73,7 +73,7 @@ class Client
             {
                 // read the complete message
                 socket.readBytes(buf, 0, waitForBytes);
-                buf.uncompress();
+                //buf.uncompress();
                 readMessage(buf);
                 buf.clear();
                 waitForBytes = 0;
