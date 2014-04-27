@@ -36,7 +36,7 @@ class ClientData {
         for (guid in chars.keys())
         {
             var char = chars.get(guid);
-            if (true)//if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
+            if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
             {
                 nearby[nearbyCount++] = char;
             }
@@ -54,6 +54,7 @@ class ClientData {
             byteArray.writeInt(Std.int(char.y));
             byteArray.writeByte(Std.int(char.moving.x));
             byteArray.writeByte(Std.int(char.moving.y));
+            byteArray.writeBoolean(char.facingRight);
             byteArray.writeByte(Stabber.stateToInt.get(char.state));
         }
         

@@ -96,10 +96,12 @@ class Client
                     
                     char.x = buf.readInt();
                     char.y = buf.readInt();
+                    var dir = buf.readBoolean();
                     var mx = buf.readByte();
                     var my = buf.readByte();
                     if (guid != id)
                     {
+                        char.facingRight = dir;
                         char.moving.x = mx;
                         char.moving.y = my;
                     }

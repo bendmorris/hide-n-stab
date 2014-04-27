@@ -302,7 +302,7 @@ class Stabber extends Entity
             }
         }
         
-        layer = Std.int((Defs.WORLD_HEIGHT - y) / 10);
+        layer = Std.int((Defs.WORLD_HEIGHT - y) / 4);
         
         if (revealTime > 0)
         {
