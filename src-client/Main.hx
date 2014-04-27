@@ -19,7 +19,7 @@ class Main extends Engine {
 #end
     
     public override function new(width:Int=0, height:Int=0, frameRate:Float=60, fixed:Bool=false, ?renderMode:RenderMode) {
-        super(Defs.WIDTH, Defs.HEIGHT, frameRate, fixed, renderMode);
+        super(Defs.WIDTH, Defs.HEIGHT, frameRate, fixed, RenderMode.BUFFER);
     }
     
     override public function init() {

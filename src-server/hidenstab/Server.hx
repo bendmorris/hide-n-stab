@@ -12,7 +12,7 @@ import hidenstab.Stabber;
 
 class Server extends ThreadServer<ClientData, ByteArray>
 {
-    static inline var UPDATE_FREQ:Float=1/60;
+    static inline var UPDATE_FREQ:Float=1/30;
     
     var clients:Map<Guid, ClientData>;
     var clientCount:Int = 0;
@@ -146,6 +146,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
         clientCount += 1;
         
         spawn(c);
+        
+        s.output.bigEndian = true;
         
         return c;
     }

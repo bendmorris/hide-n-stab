@@ -4,9 +4,10 @@ typedef Guid = Int;
 
 class Defs
 {
-    public static inline var MAX_INT=32767;
+    public static inline var MAX_INT=536870912;
+    public static inline var MSG_LEN=256;
 
-    public static var HOST="192.168.1.19";
+    public static var HOST="localhost";
     public static var PORT=27278;
     
     public static inline var SCALE:Int=2;
@@ -22,7 +23,7 @@ class Defs
     
     public static inline var BGCOLOR:Int=0x000000;
     
-    public static inline var MOVE_PER_SEC:Float=48;
+    public static inline var MOVE_PER_SEC:Float=96/SCALE;
     public static inline var RUN_MULT:Float=2.5;
     public static inline var REVEAL_TIME:Float=3;
     public static inline var Y_SPEED:Float=0.67;
@@ -33,6 +34,7 @@ class Defs
     public static inline var MSG_SEND_MOVING=2;
     public static inline var MSG_SEND_ATTACK=3;
     public static inline var MSG_SEND_TALK=4;
+    public static inline var MSG_TERMINATOR=127;
     
     public static function init()
     {
@@ -40,6 +42,13 @@ class Defs
     
     public static function newGuid():Guid
     {
-        return Std.random(MAX_INT);
+        var g = MSG_TERMINATOR;
+        
+        while (g == MSG_TERMINATOR)
+        {
+            g = Std.random(MAX_INT);
+        }
+        
+        return g;
     }
 }

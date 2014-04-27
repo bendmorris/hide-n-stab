@@ -1,6 +1,11 @@
 package hidenstab;
 
+import haxe.io.Bytes;
+#if flash
 import flash.net.Socket;
+#else
+import sys.net.Socket;
+#end
 import flash.utils.ByteArray;
 import flash.events.Event;
 import com.haxepunk.HXP;
@@ -28,6 +33,7 @@ class Client
     public var newChars:Array<Stabber>;
     public var chars:Map<Int, Stabber>;
     public var id:Int=-1;
+    var buf:ByteArray;
     
     public function new()
     {
@@ -35,33 +41,47 @@ class Client
         lastSeen = new Map();
         thisSeen = new Map();
         newChars = new Array();
+        buf = new ByteArray();
     }
     
     public function connect()
     {
         socket = new Socket();
-        socket.addEventListener(Event.CONNECT, onConnect);
+        socket.endian = flash.utils.Endian.BIG_ENDIAN;
+        //socket.setBlocking(false);
+#if flash
         var host = Defs.HOST;
+#else
+        var host = new sys.net.Host(Defs.HOST);
+#end
         var port = Defs.PORT;
         socket.connect(host, port);
     }
     
+    var waitForBytes:Int = 0;
+    
     public function update()
     {
-        while (socket.bytesAvailable > 0)
+        while (Std.int(socket.bytesAvailable) > waitForBytes)
         {
-            var buf = new ByteArray();
-            socket.readBytes(buf);
-            readMessage(buf);
+            if (waitForBytes == 0)
+            {
+                // get the coming message size
+                waitForBytes = socket.readByte();
+            }
+            else
+            {
+                // read the complete message
+                socket.readBytes(buf, 0, waitForBytes);
+                readMessage(buf);
+                buf.clear();
+                waitForBytes = 0;
+            }
         }
     }
     
     var lastSeen:Map<Int, Bool>;
     var thisSeen:Map<Int, Bool>;
-    
-    function onConnect(d:Dynamic)
-    {
-    }
     
     function readMessage(buf:ByteArray)
     {
@@ -100,7 +120,7 @@ class Client
                     
                     var x = buf.readUnsignedInt();
                     var y = buf.readUnsignedInt();
-                    if (newChar)
+                    if (newChar || Math.max(Math.abs(char.x-x), Math.abs(char.y-y)) > char.width)
                     {
                         char.x = x;
                         char.y = y;
@@ -149,6 +169,7 @@ class Client
                 lastSeen = thisSeen;
                 thisSeen = emptyMap;
             }
+            default: {}
         }
     }
 }

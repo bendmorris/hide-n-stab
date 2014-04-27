@@ -29,39 +29,53 @@ class ClientData {
     
     public function update(chars:Map<Guid, Stabber>)
     {
-        var byteArray = Data.getByteArray();
+        var me = stabber;
         
-        byteArray.writeByte(Defs.MSG_SEND_CHARS);
-        
-        for (guid in chars.keys())
+        if (me != null)
         {
-            var char = chars.get(guid);
-            if (Math.abs(stabber.x - char.x) < Defs.WIDTH * 1.5 && Math.abs(stabber.y - char.y) < Defs.HEIGHT * 1.5)
-            {
-                nearby[nearbyCount++] = char;
-            }
-        }
-        
-        byteArray.writeByte(nearbyCount);
-        
-        for (n in 0 ... nearbyCount)
-        {
-            var char = nearby[n];
-            var guid = char.guid;
+            var byteArray = Data.getByteArray();
             
-            byteArray.writeInt(guid);
-            byteArray.writeUnsignedInt(Std.int(char.x));
-            byteArray.writeUnsignedInt(Std.int(char.y));
-            byteArray.writeByte(Std.int(char.moving.x));
-            byteArray.writeByte(Std.int(char.moving.y));
-            byteArray.writeBoolean(char.facingRight);
-            var stateCode = Stabber.stateToInt.get(char.state);
-            if (char.state == Dead && char.pc) stateCode += 1;
-            byteArray.writeByte(stateCode);
+            byteArray.writeByte(Defs.MSG_SEND_CHARS);
+            
+            if (chars.get(guid) != null)
+            {
+                nearby[nearbyCount++] = me;
+            }
+            
+            for (guid in chars.keys())
+            {
+                if (guid != this.guid)
+                {
+                    var char = chars.get(guid);
+                    if (Math.abs(me.x - char.x) < Defs.WIDTH * 1.25 && 
+                        Math.abs(me.y - char.y) < Defs.HEIGHT * 1.25)
+                    {
+                        nearby[nearbyCount++] = char;
+                    }
+                }
+            }
+            
+            byteArray.writeByte(nearbyCount);
+            
+            for (n in 0 ... nearbyCount)
+            {
+                var char = nearby[n];
+                var guid = char.guid;
+                
+                byteArray.writeInt(guid);
+                byteArray.writeUnsignedInt(Std.int(char.x));
+                byteArray.writeUnsignedInt(Std.int(char.y));
+                byteArray.writeByte(Std.int(char.moving.x));
+                byteArray.writeByte(Std.int(char.moving.y));
+                byteArray.writeBoolean(char.facingRight);
+                var stateCode = Stabber.stateToInt.get(char.state);
+                if (char.state == Dead && char.pc) stateCode += 1;
+                byteArray.writeByte(stateCode);
+            }
+            
+            nearbyCount = 0;
+            
+            Data.write(socket);
         }
-        
-        nearbyCount = 0;
-        
-        Data.write(socket);
     }
 }

@@ -20,10 +20,16 @@ class Data
     
     public static function write(socket:Socket)
     {
+        //byteArray.compress();
+        var l = Std.int(byteArray.length);
 #if flash
         socket.writeBytes(byteArray);
         socket.flush();
+        trace('sent ' + l + ' bytes');
 #else
+    #if server
+        socket.output.writeByte(l);
+    #end
         socket.output.write(byteArray);
         socket.output.flush();
 #end

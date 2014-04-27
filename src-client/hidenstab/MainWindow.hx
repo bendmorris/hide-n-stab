@@ -12,8 +12,6 @@ import hidenstab.Stabber;
 
 class MainWindow extends Scene
 {
-    var s:Stabber;
-    
     var moving:Point;
     
     var lastMovingSent:Point;
@@ -36,8 +34,8 @@ class MainWindow extends Scene
         Input.define("down", [Key.DOWN, Key.S]);
         Input.define("left", [Key.LEFT, Key.A]);
         Input.define("right", [Key.RIGHT, Key.D]);
-        Input.define("attack", [Key.SPACE, Key.X]);
-        Input.define("talk", [Key.Z]);
+        Input.define("attack", [Key.SPACE, Key.X, Key.K]);
+        Input.define("talk", [Key.Z, Key.L]);
         
         Client.init();
     }
@@ -59,7 +57,7 @@ class MainWindow extends Scene
         
         if (client.id != -1)
         {
-            s = client.chars.get(client.id);
+            var s:Stabber = client.chars.get(client.id);
             
             if (s != null)
             {
