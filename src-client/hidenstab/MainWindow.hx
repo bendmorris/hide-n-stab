@@ -178,6 +178,8 @@ class MainWindow extends Scene
                 if (Input.pressed("attack")) {
                     s.attack();
                     
+                    Sound.playSound("attack");
+                    
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_ATTACK);
                     ba.writeInt(client.id);

@@ -1,5 +1,6 @@
 package hidenstab;
 
+
 typedef Guid = Int;
 
 class Defs
@@ -43,6 +44,9 @@ class Defs
     
     public static function init()
     {
+#if !server
+        Sound.init();
+#end
     }
     
     public static function newGuid():Guid

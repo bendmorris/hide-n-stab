@@ -205,10 +205,12 @@ class Client
                     score += 1;
                     window.killLabel.alpha = 1;
                     updateScoreLabel();
+                    Sound.playSound("kill");
                 }
                 else
                 {
                     window.failLabel.alpha = 1;
+                    Sound.playSound("scatter");
                 }
             }
             default: {}

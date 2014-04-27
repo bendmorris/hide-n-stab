@@ -40,7 +40,7 @@ server-run: server
 	./server
 
 
-assets: images
+assets: images sounds
 
 images: scripts/inkscape_split.py $(wildcard assets/spine/*.spine) $(wildcard assets/spine/*.svg)
 	for i in $(wildcard assets/spine/*.svg); \
@@ -49,3 +49,9 @@ images: scripts/inkscape_split.py $(wildcard assets/spine/*.spine) $(wildcard as
     done
 	rm -f assets/spine/*_all*
 	touch assets
+
+sounds: $(patsubst assets/sound/%.wav, assets/sound/%.mp3, $(wildcard assets/sound/*.wav))
+
+%.mp3: %.wav
+	rm -f $@
+	ffmpeg -i $< -acodec libmp3lame -ab 192k -ar 11025 $@
