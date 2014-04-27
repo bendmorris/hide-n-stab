@@ -87,7 +87,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
             
             for (char in chars.iterator())
             {
-                char.changedState = false;
                 char.update();
             }
             
