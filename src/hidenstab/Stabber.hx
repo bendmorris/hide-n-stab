@@ -84,6 +84,7 @@ class Stabber extends Entity
         3 => Attack(Stab),
         4 => Attack(Swing),
         5 => Dead,
+        6 => Dead,
     ];
     
     public static var stateToInt:Map<StabberState, Int> = [

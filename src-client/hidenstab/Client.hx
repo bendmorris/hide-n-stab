@@ -120,6 +120,10 @@ class Client
                         char.facingRight = dir;
                     }
                     var newState:Int = buf.readByte();
+                    if (newState == 6)
+                    {
+                        char.pc = true;
+                    }
                     char.state = Stabber.intToState.get(newState);
                     
                     thisSeen.set(guid, true);

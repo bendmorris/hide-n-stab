@@ -18,8 +18,12 @@ class MainWindow extends Scene
     
     var lastMovingSent:Point;
     
+    var seenDead:Map<Int, Bool>;
+    
     override public function begin()
     {
+        seenDead = new Map();
+        
         var b = new Backdrop();
         var e = new Entity(0, 0, b);
         e.layer = Defs.WORLD_HEIGHT + 1;
@@ -47,7 +51,10 @@ class MainWindow extends Scene
         while (client.newChars.length > 0)
         {
             var newChar = client.newChars.pop();
-            add(newChar);
+            if (!seenDead.exists(newChar.guid))
+            {
+                add(newChar);
+            }
         }
         
         if (client.id != -1)
@@ -102,6 +109,14 @@ class MainWindow extends Scene
                     Math.max(0, s.y + s.height*4 - Defs.HEIGHT), 
                     Math.min(Defs.WORLD_HEIGHT - Defs.HEIGHT, s.y - s.height*4)));
             }
+            else
+            {
+                centerCamera();
+            }
+        }
+        else
+        {
+            centerCamera();
         }
         
         for (key in client.chars.keys())
@@ -112,9 +127,16 @@ class MainWindow extends Scene
                 client.chars.remove(key);
                 remove(char);
                 StabberPool.recycle(char);
+                seenDead.set(char.guid, true);
             }
         }
         
         super.update();
+    }
+    
+    function centerCamera()
+    {
+        HXP.camera.x = Defs.WORLD_WIDTH/2 - Defs.WIDTH/2;
+        HXP.camera.y = Defs.WORLD_HEIGHT/2 - Defs.HEIGHT/2;
     }
 }
