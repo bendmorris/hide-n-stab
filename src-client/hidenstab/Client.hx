@@ -174,7 +174,7 @@ class Client
                             window.contLabel.alpha = 1;
                             window.contLabel.visible = true;
                             window.needRespawn = true;
-                            if (seenDeath = false) 
+                            if (!seenDeath) 
                             {
                                 Sound.playSound("lose");
                             }
