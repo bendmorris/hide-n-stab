@@ -107,11 +107,12 @@ class Server extends ThreadServer<ClientData, ByteArray>
         // add random non-pc characters
         for (i in 0 ... (2 + Std.random(3)))
         {
-            var char:Stabber = StabberPool.get(c.guid, false);
+            var rid = Defs.newGuid();
+            var char:Stabber = StabberPool.get(rid, false);
             char.x = Std.random(Defs.WORLD_WIDTH);
             char.y = Std.random(Defs.WORLD_HEIGHT);
             char.facingRight = Std.random(2) == 0;
-            chars.set(Defs.newGuid(), char);
+            chars.set(rid, char);
         }
         
         var byteArray = Data.getByteArray();
