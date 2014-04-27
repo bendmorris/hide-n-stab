@@ -53,6 +53,7 @@ class MainWindow extends Scene
         Input.define("attack", [Key.SPACE, Key.X, Key.K]);
         Input.define("talk", [Key.Z, Key.L]);
         Input.define("continue", [Key.C]);
+        Input.define("mute", [Key.M]);
         
         Client.init();
         Client.current.window = this;
@@ -93,6 +94,8 @@ class MainWindow extends Scene
     override public function update()
     {
         var client = Client.current;
+        
+        if (Input.pressed("mute")) Sound.muted = !Sound.muted;
         
         if (killLabel.alpha > 0)
         {
