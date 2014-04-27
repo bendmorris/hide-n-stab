@@ -79,7 +79,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 char.update();
                 if (char.attackFinished)
                 {
-                    var tx = char.x + width * (facingRight ? 1 : -1);
+                    var tx = char.x + char.width * (char.facingRight ? 1 : -1);
                     for (target in chars.iterator())
                     {
                         if (target != char && target.facingRight == char.facingRight)
@@ -94,10 +94,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 }
             }
             
-            for (id in char.keys())
+            for (id in chars.keys())
             {
-                var char = char.get(id);
-                if (char.state == Dead)
+                var char = chars.get(id);
+                if (char.dead)
                 {
                     // this character is dead
                     chars.remove(id);

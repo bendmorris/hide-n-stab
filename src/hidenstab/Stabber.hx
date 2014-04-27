@@ -98,7 +98,12 @@ class Stabber extends Entity
     public static var animationTime:Map<String, Float> = [
         "stab" => 0.5,
         "swing" => 0.5,
+        "scatter" => 1,
+        "die" => 2,
     ];
+    
+    public var score:Int=0;
+    public var dead:Bool=false;
     
 #if !server
     static var loader:BitmapDataTextureLoader;
@@ -252,6 +257,9 @@ class Stabber extends Entity
         {
             behaviorType = Loiter(Stand);
         }
+        
+        score = 0;
+        dead = false;
     }
     
     public var animation:String;
@@ -368,11 +376,11 @@ class Stabber extends Entity
                     }
                 }
 #if server
-                case Attack(a)
+                case Attack(a):
                 {
                     if (animationTimer >= 0.1)
                     {
-                        attackFinished = true
+                        attackFinished = true;
                     }
                 }
 #end
@@ -396,7 +404,7 @@ class Stabber extends Entity
                 {
                     if (Math.abs(x - wx) <= 8)
                     {
-                        moving.x = 0
+                        moving.x = 0;
                     }
                     else
                     {
@@ -405,7 +413,7 @@ class Stabber extends Entity
                     
                     if (Math.abs(y - wy) <= 8)
                     {
-                        moving.y = 0
+                        moving.y = 0;
                     }
                     else
                     {
@@ -440,13 +448,21 @@ class Stabber extends Entity
         {
             var dur = animationTime.get(animation);
             animationTimer += HXP.elapsed / dur;
-            if (animationTimer >= 1)
         }
+        
+        if (animationTime.exists(animation) && animationTimer >= 1)
 #else
         if (!loopedAnimation && remaining <= 0)
 #end
         {
-            state = Idle(Stand);
+            if (state == Dead)
+            {
+                dead = true;
+            }
+            else
+            {
+                state = Idle(Stand);
+            }
         }
         
         visible = true;
