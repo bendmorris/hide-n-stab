@@ -94,8 +94,8 @@ class Client
                         }
                     }
                     
-                    char.x = buf.readInt();
-                    char.y = buf.readInt();
+                    char.x = buf.readUnsignedInt();
+                    char.y = buf.readUnsignedInt();
                     var mx = buf.readByte();
                     var my = buf.readByte();
                     var dir = buf.readBoolean();

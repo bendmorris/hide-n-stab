@@ -21,7 +21,7 @@ class MainWindow extends Scene
     {
         var b = new Backdrop();
         var e = new Entity(0, 0, b);
-        e.layer = Defs.WORLD_WIDTH;
+        e.layer = Defs.WORLD_HEIGHT + 1;
         add(e);
         
         moving = new Point();
