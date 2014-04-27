@@ -225,6 +225,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
     function spawn(c:ClientData)
     {
         trace(Date.now().toString() + ": client connected: " + c.guid);
+        trace(clientCount + " clients connected");
         
         var char:Stabber = StabberPool.get(c.guid, true);
         char.x = Std.random(Defs.WORLD_WIDTH);
