@@ -123,6 +123,8 @@ class Stabber extends Entity
     var loopedAnimation:Bool=false;
     var animationTimer:Float = 0;
     
+    public var attackFinished:Bool = false;
+    
     public var behaviorType(default, set):BehaviorType;
     var behaviorTime:Float = 0;
     function set_behaviorType(b:BehaviorType)
@@ -168,7 +170,7 @@ class Stabber extends Entity
                     };
                 }
                 case Dead: {
-                    setAnimation("dead", false);
+                    setAnimation(pc ? "die" : "scatter", false);
                     flash = 1;
                 }
             }
@@ -237,6 +239,7 @@ class Stabber extends Entity
         hide();
         
         animationTimer = 0;
+        attackFinished = false;
         
         moving.x = moving.y = 0;
         moveToward.x = moveToward.y = -1;
@@ -310,6 +313,8 @@ class Stabber extends Entity
         sp.update();
 #end
         
+        attackFinished = false;
+        
         if (visible)
         {
             if (moveToward.x != -1 && moveToward.y != -1)
@@ -327,8 +332,10 @@ class Stabber extends Entity
             {
                 case Dead:
                 {
+#if !server
                     _scene.remove(this);
                     StabberPool.recycle(this);
+#end
                 }
                 case Idle(i):
                 {
@@ -360,6 +367,15 @@ class Stabber extends Entity
                         y = HXP.clamp(y, height, Defs.WORLD_HEIGHT-height);
                     }
                 }
+#if server
+                case Attack(a)
+                {
+                    if (animationTimer >= 0.1)
+                    {
+                        attackFinished = true
+                    }
+                }
+#end
                 
                 default: {}
             }
@@ -378,7 +394,7 @@ class Stabber extends Entity
                 }
                 case WalkTo(wx, wy):
                 {
-                    if (Math.abs(x - wx) < 4)
+                    if (Math.abs(x - wx) <= 8)
                     {
                         moving.x = 0
                     }
@@ -387,7 +403,7 @@ class Stabber extends Entity
                         moving.x = wx > x ? 1 : -1;
                     }
                     
-                    if (Math.abs(y - wy) < 4)
+                    if (Math.abs(y - wy) <= 8)
                     {
                         moving.y = 0
                     }
@@ -420,12 +436,12 @@ class Stabber extends Entity
         super.update();
         
 #if server
-        if (!loopedAnimation)
+        if (!loopedAnimation && animationTime.exists(animation))
         {
-            animationTimer += HXP.elapsed;
+            var dur = animationTime.get(animation);
+            animationTimer += HXP.elapsed / dur;
+            if (animationTimer >= 1)
         }
-        
-        if (animationTime.exists(animation) && animationTimer >= animationTime[animation])
 #else
         if (!loopedAnimation && remaining <= 0)
 #end
@@ -462,6 +478,17 @@ class Stabber extends Entity
                 Idle(Talk);
             }
         };
+    }
+    
+    public function kill(target:Stabber)
+    {
+        if (target.pc) score += 1;
+        target.die();
+    }
+    
+    public function die()
+    {
+        state = Dead;
     }
     
 #if server

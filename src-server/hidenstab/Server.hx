@@ -77,6 +77,31 @@ class Server extends ThreadServer<ClientData, ByteArray>
             for (char in chars.iterator())
             {
                 char.update();
+                if (char.attackFinished)
+                {
+                    var tx = char.x + width * (facingRight ? 1 : -1);
+                    for (target in chars.iterator())
+                    {
+                        if (target != char && target.facingRight == char.facingRight)
+                        {
+                            if (Math.max(Math.abs(target.x - tx), Math.abs(target.y - char.y)) < char.width)
+                            {
+                                // hit
+                                char.kill(target);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for (id in char.keys())
+            {
+                var char = char.get(id);
+                if (char.state == Dead)
+                {
+                    // this character is dead
+                    chars.remove(id);
+                }
             }
             
             for (client in clients.iterator())
