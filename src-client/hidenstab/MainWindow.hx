@@ -7,6 +7,7 @@ import com.haxepunk.Entity;
 import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
 import hidenstab.Backdrop;
+import hidenstab.Stabber;
 
 
 class MainWindow extends Scene
@@ -100,6 +101,17 @@ class MainWindow extends Scene
                 HXP.camera.y = Std.int(HXP.clamp(HXP.camera.y, 
                     Math.max(0, s.y + s.height*4 - Defs.HEIGHT), 
                     Math.min(Defs.WORLD_HEIGHT - Defs.HEIGHT, s.y - s.height*4)));
+            }
+        }
+        
+        for (key in client.chars.keys())
+        {
+            var char = client.chars.get(key);
+            if (char.dead)
+            {
+                client.chars.remove(key);
+                remove(char);
+                StabberPool.recycle(char);
             }
         }
         

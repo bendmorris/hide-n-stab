@@ -459,15 +459,6 @@ class Stabber extends Entity
         }
         
         visible = true;
-        
-#if !server
-        if (dead)
-        {
-            _scene.remove(this);
-            StabberPool.recycle(this);
-        }
-#end
-        visible = true;
     }
     
     function hide()

@@ -130,8 +130,12 @@ class Client
                     if (!thisSeen.exists(id))
                     {
                         var thisChar = chars.get(id);
-                        thisChar.scene.remove(thisChar);
-                        chars.remove(id);
+                        if (thisChar.state != Dead)
+                        {
+                            thisChar.scene.remove(thisChar);
+                            chars.remove(id);
+                            StabberPool.recycle(thisChar);
+                        }
                     }
                     
                     lastSeen.remove(id);
