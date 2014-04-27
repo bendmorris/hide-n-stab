@@ -18,7 +18,7 @@ class MainWindow extends Scene
     public static inline var FONT_COLOR:Int=0xFFFFFF;
     public static var FONT_OPTIONS={font:FONT_NAME, size:FONT_SIZE, color:FONT_COLOR};
     
-    static inline var TEXT_FADE_RATE:Float=0.5;
+    static inline var TEXT_FADE_RATE:Float=1;
     
     var moving:Point;
     
