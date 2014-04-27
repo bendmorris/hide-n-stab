@@ -62,7 +62,7 @@ class Client
     
     public function update()
     {
-        trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
+        //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
         while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 4))
         {
             if (waitForBytes == 0)
@@ -89,15 +89,8 @@ class Client
                 waitForBytes = 0;
             }
             
-            trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
+            //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
         }
-        
-        /*if (socket.bytesAvailable == 0)
-        {
-            var ba = Data.getByteArray();
-            ba.writeByte(Defs.MSG_SEND_CHARS);
-            Data.write(socket);
-        }*/
     }
     
     var lastSeen:Map<Int, Bool>;
