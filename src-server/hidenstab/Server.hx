@@ -185,7 +185,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         
         lastUpdate = curTime;
         
-        while (charCount < clientCount * 3)
+        while (charCount < Math.max(clientCount * 3, 10))
         {
             spawnRandom();
         }
