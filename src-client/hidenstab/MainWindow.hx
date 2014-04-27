@@ -136,6 +136,9 @@ class MainWindow extends Scene
                 var ba = Data.getByteArray();
                 ba.writeByte(Defs.MSG_SEND_RESPAWN);
                 Data.write(client.socket);
+                
+                needRespawn = false;
+                contLabel.visible = false;
             }
         }
         else if (client.id != -1)
