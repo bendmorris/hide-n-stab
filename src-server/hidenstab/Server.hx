@@ -119,8 +119,9 @@ class Server extends ThreadServer<ClientData, ByteArray>
             var elapsedTime = curTime - lastUpdate;
             HXP.elapsed = elapsedTime;
             
-            for (char in chars.iterator())
+            for (id in chars.keys())
             {
+                var char = chars.get(id);
                 char.update();
                 if (char.attackFinished)
                 {
@@ -132,7 +133,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
                             if (Math.max(Math.abs(target.x - tx), Math.abs(target.y - char.y)) < char.width)
                             {
                                 // hit
-                                char.kill(target);
+                                var success = char.kill(target);
+                                var client = clients.get(id);
+                                var msgType = success ? Defs.MSG_SEND_KILL_SUCCESS : Defs.MSG_SEND_KILL_FAIL;
+                                
+                                var byteArray = Data.getByteArray();
+                                byteArray.writeByte(msgType);
+                                Data.write(client.socket);
                             }
                         }
                     }
