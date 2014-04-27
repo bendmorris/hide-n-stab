@@ -96,11 +96,11 @@ class MainWindow extends Scene
                 }
                 
                 HXP.camera.x = Std.int(HXP.clamp(HXP.camera.x, 
-                    Math.max(0, s.x + s.width*3 - Defs.WIDTH), 
-                    Math.min(Defs.WORLD_WIDTH - Defs.WIDTH, s.x - s.width*3)));
+                    Math.max(0, s.x + s.width*4 - Defs.WIDTH), 
+                    Math.min(Defs.WORLD_WIDTH - Defs.WIDTH, s.x - s.width*4)));
                 HXP.camera.y = Std.int(HXP.clamp(HXP.camera.y, 
-                    Math.max(0, s.y + s.height*3 - Defs.HEIGHT), 
-                    Math.min(Defs.WORLD_HEIGHT - Defs.HEIGHT, s.y - s.height*3)));
+                    Math.max(0, s.y + s.height*4 - Defs.HEIGHT), 
+                    Math.min(Defs.WORLD_HEIGHT - Defs.HEIGHT, s.y - s.height*4)));
             }
         }
         
