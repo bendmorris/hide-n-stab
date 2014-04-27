@@ -64,7 +64,7 @@ class StabberPool
             newItem.reinit(guid, pc);
             return newItem;
         } else {
-            return new Stabber(guid);
+            return new Stabber(guid, pc);
         }
     }
     
