@@ -378,8 +378,23 @@ class Stabber extends Entity
                 }
                 case WalkTo(wx, wy):
                 {
-                    moving.x = wx > x ? 1 : (wx < x ? -1 : 0);
-                    moving.y = wy > y ? 1 : (wy < y ? -1 : 0);
+                    if (Math.abs(x - wx) < 4)
+                    {
+                        moving.x = 0
+                    }
+                    else
+                    {
+                        moving.x = wx > x ? 1 : -1;
+                    }
+                    
+                    if (Math.abs(y - wy) < 4)
+                    {
+                        moving.y = 0
+                    }
+                    else
+                    {
+                        moving.y = wy > y ? 1 : -1;
+                    }
                 }
             }
             
