@@ -119,7 +119,7 @@ class MainWindow extends Scene
         if (scoreLabel.scale > 1)
         {
             scoreLabel.scale = Math.max(1, scoreLabel.scale - HXP.elapsed/TEXT_FADE_RATE);
-            if (scoreLabel.scale <= 1) Sound.playSound("score");
+            if (scoreLabel.scale <= 1 && client.score > 0) Sound.playSound("score");
         }
         
         client.update();
