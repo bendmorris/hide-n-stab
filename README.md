@@ -1,7 +1,8 @@
 Hide-n-Stab!
 ============
 
-Hide-n-Stab is an online, multiplayer stealth action game.
+Hide-n-Stab is an online, multiplayer stealth action game. You can play in your 
+browser [here](http://54.244.244.60).
 
 There are many cloaked figures that appear identical, but they differ beneath 
 the surface - some are other players like yourself, while others are only 
