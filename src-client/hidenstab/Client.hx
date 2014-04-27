@@ -112,6 +112,7 @@ class Client
                 score = 0;
                 updateScoreLabel();
                 HXP.screen.shake(4, 0.2);
+                Sound.playSound("start");
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
