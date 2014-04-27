@@ -15,6 +15,7 @@ revealing you to other players as a human for a short time, so be careful and
 stay hidden until the time is right to strike.
 
 ![a successful kill](https://raw.githubusercontent.com/bendmorris/hide-n-stab/master/promo/Screenshot%20-%2004272014%20-%2003:32:13%20PM.png)
+
 This game was created by Ben Morris (<ben@bendmorris.com>) for Ludum Dare 29, 
 "beneath the surface." All code and assets were created within 48 hours. The 
 game is written in the Haxe programming language as well as open source game 
