@@ -241,6 +241,7 @@ class Stabber extends Entity
         sp.color = 0xFFFFFF;
         sp.update();
         sp.skeleton.setToSetupPose();
+        hide();
 #end
         
         revealTime = 0;
