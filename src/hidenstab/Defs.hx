@@ -1,6 +1,6 @@
 package hidenstab;
 
-typedef Guid = UInt;
+typedef Guid = Int;
 
 class Defs
 {

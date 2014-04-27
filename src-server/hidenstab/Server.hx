@@ -52,14 +52,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 // set moving
                 char.moving.x = msg.readByte();
                 char.moving.y = msg.readByte();
-                if (char.moving.x != 0 || char.moving.y != 0)
-                {
-                    char.state = Walk;
-                }
-                else
-                {
-                    char.state = Idle(Stand);
-                }
             }
             case Defs.MSG_SEND_ATTACK:
             {
