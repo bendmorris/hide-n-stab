@@ -100,6 +100,8 @@ class Client
     var lastSeen:Map<Int, Bool>;
     var thisSeen:Map<Int, Bool>;
     
+    var seenDeath:Bool = false;
+    
     function readMessage(buf:ByteArray)
     {
         var msgType = buf.readByte();
@@ -113,6 +115,7 @@ class Client
                 updateScoreLabel();
                 HXP.screen.shake(4, 0.2);
                 Sound.playSound("start");
+                seenDeath = false;
             }
             case Defs.MSG_SEND_CHARS: {
                 // character updates
@@ -171,7 +174,11 @@ class Client
                             window.contLabel.alpha = 1;
                             window.contLabel.visible = true;
                             window.needRespawn = true;
-                            Sound.playSound("lose");
+                            if (seenDeath = false) 
+                            {
+                                Sound.playSound("lose");
+                            }
+                            seenDeath = true;
                         }
                     }
                     char.state = Stabber.intToState.get(newState);
