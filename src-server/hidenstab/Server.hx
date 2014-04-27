@@ -52,12 +52,26 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 // set moving
                 char.moving.x = msg.readByte();
                 char.moving.y = msg.readByte();
+                if (char.moving.x != 0 || char.moving.y != 0)
+                {
+                    char.state = Walk;
+                }
+                else
+                {
+                    char.state = Idle(Stand);
+                }
             }
-            case Defs.MSG_SEND_STATE:
+            case Defs.MSG_SEND_ATTACK:
             {
                 // attack
-                trace(char.guid + ' state change');
-                char.state = Stabber.intToState.get(msg.readByte());
+                trace(char.guid + ' attack');
+                char.attack();
+            }
+            case Defs.MSG_SEND_TALK:
+            {
+                // attack
+                trace(char.guid + ' talk');
+                char.talk();
             }
             default: {}
         }
@@ -112,7 +126,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var byteArray = Data.getByteArray();
         
         byteArray.writeByte(Defs.MSG_SEND_GUID);
-        byteArray.writeUnsignedInt(c.guid);
+        byteArray.writeInt(c.guid);
         
         Data.write(s);
         
