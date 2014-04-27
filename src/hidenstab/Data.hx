@@ -33,10 +33,16 @@ class Data
         socket.flush();
 #else
         socket.output.prepare(Std.int(byteArray.length) + 2);
-        socket.output.writeByte(b1);
-        socket.output.writeByte(b2);
-        socket.output.write(byteArray);
-        socket.output.flush();
+        try
+        {
+            socket.output.writeByte(b1);
+            socket.output.writeByte(b2);
+            socket.output.write(byteArray);
+            socket.output.flush();
+        }
+        catch (e:Dynamic)
+        {
+        }
 #end
     }
 }
