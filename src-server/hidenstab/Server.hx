@@ -104,6 +104,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     // this character is dead
                     chars.remove(id);
                     charCount -= 1;
+                    
+                    if (char.pc)
+                    {
+                        respawn(id);
+                    }
+                    
+                    StabberPool.recycle(char);
                 }
             }
             
@@ -115,10 +122,21 @@ class Server extends ThreadServer<ClientData, ByteArray>
         
         lastUpdate = curTime;
         
-        while (charCount < clientCount * 2)
+        while (charCount < clientCount * 3)
         {
             spawnRandom();
         }
+    }
+    
+    function respawn(guid:Guid)
+    {
+        var client = clients.get(guid);
+        clients.remove(guid);
+        var newGuid = Defs.newGuid();
+        trace(guid + " respawn as " + newGuid);
+        client.guid = newGuid;
+        clients.set(client.guid, client);
+        spawn(client);
     }
     
     override function clientConnected(s:Socket):ClientData
@@ -127,6 +145,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         clients.set(c.guid, c);
         clientCount += 1;
         
+        spawn(c);
+        
+        return c;
+    }
+    
+    function spawn(c:ClientData)
+    {
         trace("Client connected: " + c.guid);
         
         var char:Stabber = StabberPool.get(c.guid, true);
@@ -137,7 +162,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         c.stabber = char;
         
         // add random non-pc characters
-        for (i in 0 ... (2 + Std.random(3)))
+        for (i in 0 ... (3 + Std.random(3)))
         {
             spawnRandom();
         }
@@ -147,9 +172,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         byteArray.writeByte(Defs.MSG_SEND_GUID);
         byteArray.writeInt(c.guid);
         
-        Data.write(s);
-        
-        return c;
+        Data.write(c.socket);
     }
     
     override public function clientDisconnected(clientData:ClientData)
