@@ -128,7 +128,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     var tx = char.x + char.width * (char.facingRight ? 1 : -1);
                     for (target in chars.iterator())
                     {
-                        if (target != char && target.facingRight == char.facingRight)
+                        if (target != char && 
+                            !target.dead &&
+                            target.state != Dead &&
+                            target.facingRight == char.facingRight)
                         {
                             if (Math.max(Math.abs(target.x - tx), Math.abs(target.y - char.y)) < char.width)
                             {
