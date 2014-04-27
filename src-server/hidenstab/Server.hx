@@ -31,16 +31,38 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function readClientMessage(c:ClientData, buf:Bytes, pos:Int, len:Int)
     {
-        var ba:ByteArray;
-#if flash
-        ba = buf.getData();
-#else
-        ba = ByteArray.fromBytes(buf);
-#end
-        return { msg : ba, bytes : len };
+        var bytesConsumed = 0;
+        
+        while (len > 0)
+        {
+            var ba:ByteArray;
+            var waitFor = buf.get(pos);
+            
+            if (len > waitFor)
+            {
+                var sub = buf.sub(pos+1, waitFor);
+                ba = ByteArray.fromBytes(sub);
+                //trace("msg length: " + waitFor);
+                
+                c.ready = true;
+                
+                readMessage(c, ba);
+                
+                bytesConsumed += waitFor + 1;
+                
+                pos += waitFor + 1;
+                len -= waitFor + 1;
+            }
+            else
+            {
+                c.ready = false;
+            }
+        }
+        
+        return { msg : null, bytes : bytesConsumed };
     }
     
-    override function clientMessage(c:ClientData, msg:ByteArray)
+    function readMessage(c:ClientData, msg:ByteArray)
     {
         var id = c.guid;
         var char = chars.get(id);
@@ -48,6 +70,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
         while (msg.bytesAvailable > 0)
         {
             var msgType = msg.readByte();
+            
+            trace(msgType);
             
             switch(msgType)
             {
@@ -126,7 +150,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
             for (client in clients.iterator())
             {
                 
-                client.update(chars);
+                if (client.ready) client.update(chars);
             }
         }
         

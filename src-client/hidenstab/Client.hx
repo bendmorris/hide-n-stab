@@ -62,7 +62,7 @@ class Client
     
     public function update()
     {
-        trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 2));
+        //trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 2));
         while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 2))
         {
             if (waitForBytes == 0)
@@ -76,7 +76,7 @@ class Client
                 try
                 {
                     socket.readBytes(buf, 0, waitForBytes);
-                    //buf.uncompress();
+                    buf.uncompress();
                     readMessage(buf);
                 }
                 catch(e:Dynamic)
@@ -87,7 +87,7 @@ class Client
                 waitForBytes = 0;
             }
             
-            trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 1));
+            //trace(Std.int(socket.bytesAvailable) + "/" + Math.max(waitForBytes, 1));
         }
         
         /*if (socket.bytesAvailable == 0)
