@@ -134,7 +134,6 @@ class Client
                         {
                             HXP.camera.x = char.x - Defs.WIDTH/2;
                             HXP.camera.y = char.y - Defs.HEIGHT/2;
-                            Sound.playSound("lose");
                         }
                         
                         newChar = true;
@@ -172,6 +171,7 @@ class Client
                             window.contLabel.alpha = 1;
                             window.contLabel.visible = true;
                             window.needRespawn = true;
+                            Sound.playSound("lose");
                         }
                     }
                     char.state = Stabber.intToState.get(newState);
