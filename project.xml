@@ -27,4 +27,6 @@
     <assets path="assets/graphics" rename="graphics" include="*.json|*.atlas" type="text"/>
     <assets path="assets/font" rename="font" include="*.fnt" type="text"/>
     <assets path="assets/font" rename="font" include="*.png" type="image"/>
+    <assets path="assets/sound" rename="sound" include="*.mp3" type="sound" if="flash"/>
+    <assets path="assets/sound" rename="sound" include="*.wav" type="sound" unless="flash"/>
 </project>
