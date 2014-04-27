@@ -64,8 +64,8 @@ class MainWindow extends Scene
                                    Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
                                    0, 0, FONT_OPTIONS);
         killLabel.color = 0xFF0000;
-        contLabel = new BitmapText("You were killed! Press C to continue.",
-                                   Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT/2),
+        contLabel = new BitmapText("  You were killed!\nPress C to continue.",
+                                   Std.int(Defs.WIDTH/2), Std.int(Defs.HEIGHT*3/4),
                                    0, 0, FONT_OPTIONS);
         contLabel.color = 0xFF0000;
         scoreLabel = new BitmapText("Score: 0",

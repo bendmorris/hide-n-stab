@@ -194,6 +194,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
     function dead(guid:Guid)
     {
         var client = clients.get(guid);
+        client.ready = false;
         clients.remove(guid);
         waitForRespawn[guid] = client;
     }
