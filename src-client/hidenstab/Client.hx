@@ -161,6 +161,10 @@ class Client
                     if (newState == 6)
                     {
                         char.pc = true;
+                        if (guid == id)
+                        {
+                            HXP.screen.shake(4, 0.2);
+                        }
                     }
                     char.state = Stabber.intToState.get(newState);
                     

@@ -105,6 +105,12 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 }
             }
             
+            for (client in clients.iterator())
+            {
+                
+                client.update(chars);
+            }
+            
             for (id in chars.keys())
             {
                 var char = chars.get(id);
@@ -121,12 +127,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     
                     StabberPool.recycle(char);
                 }
-            }
-            
-            for (client in clients.iterator())
-            {
-                
-                client.update(chars);
             }
         }
         
