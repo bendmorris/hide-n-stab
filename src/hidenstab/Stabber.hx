@@ -99,8 +99,8 @@ class Stabber extends Entity
     public static var animationTime:Map<String, Float> = [
         "stab" => 0.5,
         "swing" => 0.5,
-        "scatter" => 0.5,
-        "die" => 1,
+        "scatter" => 0.1,
+        "die" => 0.2,
     ];
     
     public var score:Int=0;
