@@ -50,8 +50,8 @@ class ClientData {
                 if (guid != this.guid)
                 {
                     var char = chars.get(guid);
-                    if (Math.abs(me.x - char.x) < Defs.WIDTH * 1.25 && 
-                        Math.abs(me.y - char.y) < Defs.HEIGHT * 1.25)
+                    if (Math.abs(me.x - char.x) < Defs.WIDTH*1.05 && 
+                        Math.abs(me.y - char.y) < Defs.HEIGHT*1.05)
                     {
                         nearby[nearbyCount++] = char;
                     }

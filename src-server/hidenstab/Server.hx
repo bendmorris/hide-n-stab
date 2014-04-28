@@ -207,7 +207,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         trace(guid + " respawn as " + newGuid);
         client.guid = newGuid;
         clients.set(client.guid, client);
-        spawn(client);
+        spawn(client, false);
         client.ready = true;
     }
     
@@ -222,9 +222,9 @@ class Server extends ThreadServer<ClientData, ByteArray>
         return c;
     }
     
-    function spawn(c:ClientData)
+    function spawn(c:ClientData, newChar:Bool=true)
     {
-        trace(Date.now().toString() + ": client connected: " + c.guid);
+        if (newChar) trace(Date.now().toString() + ": client connected: " + c.guid);
         
         var char:Stabber = StabberPool.get(c.guid, true);
         char.x = Std.random(Defs.WORLD_WIDTH);
