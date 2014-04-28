@@ -225,7 +225,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
     function spawn(c:ClientData)
     {
         trace(Date.now().toString() + ": client connected: " + c.guid);
-        trace(clientCount + " clients connected");
         
         var char:Stabber = StabberPool.get(c.guid, true);
         char.x = Std.random(Defs.WORLD_WIDTH);
@@ -246,12 +245,13 @@ class Server extends ThreadServer<ClientData, ByteArray>
         byteArray.writeInt(c.guid);
         
         Data.write(c.socket);
+        
+        trace(clientCount + " clients connected");
     }
     
     override public function clientDisconnected(clientData:ClientData)
     {
         trace(Date.now().toString() + ": client disconnected: " + clientData.guid);
-        trace(clientCount + " clients connected");
         
         clientData.leave();
         
@@ -267,6 +267,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
             clients.remove(id);
             clientCount -= 1;
         }
+        
+        trace(clientCount + " clients connected");
     }
     
     public static function main() {
