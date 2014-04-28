@@ -251,6 +251,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
     override public function clientDisconnected(clientData:ClientData)
     {
         trace(Date.now().toString() + ": client disconnected: " + clientData.guid);
+        trace(clientCount + " clients connected");
+        
         clientData.leave();
         
         var id = clientData.guid;
