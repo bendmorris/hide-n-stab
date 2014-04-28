@@ -99,8 +99,8 @@ class Stabber extends Entity
     public static var animationTime:Map<String, Float> = [
         "stab" => 0.5,
         "swing" => 0.5,
-        "scatter" => 1,
-        "die" => 2,
+        "scatter" => 0.5,
+        "die" => 1,
     ];
     
     public var score:Int=0;
@@ -516,9 +516,16 @@ class Stabber extends Entity
         state = Dead;
     }
     
-#if server
-    function doAttack()
+#if !server
+    override public function added()
     {
+        Client.current.chars.set(guid, this);
+    }
+    
+    override public function removed()
+    {
+        Client.current.chars.remove(guid);
+        StabberPool.recycle(this);
     }
 #end
 }

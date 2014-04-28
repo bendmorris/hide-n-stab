@@ -42,6 +42,7 @@ class Data
         }
         catch (e:Dynamic)
         {
+            socket.close();
         }
 #end
     }

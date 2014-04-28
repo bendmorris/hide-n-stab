@@ -25,8 +25,6 @@ class MainWindow extends Scene
     var lastMovingSent:Point;
     var lastMovingSentTime:Float=0;
     
-    var seenDead:Map<Int, Bool>;
-    
     public var killLabel:BitmapText;
     public var failLabel:BitmapText;
     public var contLabel:BitmapText;
@@ -36,8 +34,6 @@ class MainWindow extends Scene
     
     override public function begin()
     {
-        seenDead = new Map();
-        
         var b = new Backdrop();
         var e = new Entity(0, 0, b);
         e.layer = Defs.WORLD_HEIGHT + 1;
@@ -127,10 +123,7 @@ class MainWindow extends Scene
         while (client.newChars.length > 0)
         {
             var newChar = client.newChars.pop();
-            if (!seenDead.exists(newChar.guid))
-            {
-                add(newChar);
-            }
+            add(newChar);
         }
         
         if (needRespawn)
@@ -220,10 +213,7 @@ class MainWindow extends Scene
             var char = client.chars.get(key);
             if (char.dead)
             {
-                client.chars.remove(key);
                 remove(char);
-                StabberPool.recycle(char);
-                seenDead.set(char.guid, true);
             }
         }
         

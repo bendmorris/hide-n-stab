@@ -84,13 +84,15 @@ class Client
                     socket.readBytes(buf, 0, waitForBytes);
                     buf.uncompress();
                     readMessage(buf);
+                    
+                    buf.clear();
+                    waitForBytes = 0;
                 }
                 catch(e:Dynamic)
                 {
                     
                 }
-                buf.clear();
-                waitForBytes = 0;
+                
             }
             
             //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
@@ -194,8 +196,6 @@ class Client
                         if (thisChar.state != Dead)
                         {
                             thisChar.scene.remove(thisChar);
-                            chars.remove(id);
-                            StabberPool.recycle(thisChar);
                         }
                     }
                     
