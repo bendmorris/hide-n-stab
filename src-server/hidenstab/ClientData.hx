@@ -78,7 +78,9 @@ class ClientData {
             
             nearbyCount = 0;
             
-            Data.write(socket);
+            return true;
         }
+        
+        return false;
     }
 }

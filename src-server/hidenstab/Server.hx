@@ -152,7 +152,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
                                 
                                 var byteArray = Data.getByteArray();
                                 byteArray.writeByte(msgType);
-                                Data.write(client.socket);
+                                attemptWrite(client.socket);
                             }
                         }
                     }
@@ -161,7 +161,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
             
             for (client in clients.iterator())
             {
-                if (client.ready) client.update(chars);
+                if (client.ready)
+                {
+                    var success = client.update(chars);
+                    if (success) attemptWrite(client.socket);
+                }
             }
             
             for (id in chars.keys())
@@ -244,7 +248,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         byteArray.writeByte(Defs.MSG_SEND_GUID);
         byteArray.writeInt(c.guid);
         
-        Data.write(c.socket);
+        attemptWrite(c.socket);
         
         trace(clientCount + " clients connected");
     }
@@ -302,5 +306,17 @@ class Server extends ThreadServer<ClientData, ByteArray>
         char.facingRight = Std.random(2) == 0;
         chars.set(newGuid, char);
         charCount += 1;
+    }
+    
+    function attemptWrite(socket:Socket)
+    {
+        try
+        {
+            Data.write(socket);
+        }
+        catch (e:Dynamic)
+        {
+            stopClient(socket);
+        }
     }
 }
