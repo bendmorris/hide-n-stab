@@ -204,7 +204,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var client = waitForRespawn.get(guid);
         waitForRespawn.remove(guid);
         var newGuid = getGuid();
-        trace(guid + " respawn as " + newGuid);
+        trace(Date.now().toString() + ": " + guid + " respawn as " + newGuid);
         client.guid = newGuid;
         clients.set(client.guid, client);
         spawn(client, false);
