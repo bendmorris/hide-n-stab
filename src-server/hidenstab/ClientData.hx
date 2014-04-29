@@ -13,6 +13,8 @@ class ClientData {
     public var respawned:Bool=false;
     public var ready:Bool=true;
     
+    public var lastGoodWrite:Float = 0;
+    
     public function new(s:Socket)
     {
         socket = s;
