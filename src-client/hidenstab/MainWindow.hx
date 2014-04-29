@@ -118,12 +118,6 @@ class MainWindow extends Scene
         
         client.update();
         
-        while (client.newChars.length > 0)
-        {
-            var newChar = client.newChars.pop();
-            add(newChar);
-        }
-        
         if (client.needRespawn)
         {
             if (Input.pressed("continue"))
@@ -162,7 +156,6 @@ class MainWindow extends Scene
                 {
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_MOVING);
-                    ba.writeInt(client.id);
                     ba.writeByte(Std.int(moving.x));
                     ba.writeByte(Std.int(moving.y));
                     Data.write(client.socket);
@@ -179,7 +172,6 @@ class MainWindow extends Scene
                     
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_ATTACK);
-                    ba.writeInt(client.id);
                     Data.write(client.socket);
                 }
                 if (Input.pressed("talk")) {
@@ -187,7 +179,6 @@ class MainWindow extends Scene
                     
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_TALK);
-                    ba.writeInt(client.id);
                     Data.write(client.socket);
                 }
                 
@@ -198,14 +189,6 @@ class MainWindow extends Scene
                     Math.max(0, s.y + s.height*4 - Defs.HEIGHT), 
                     Math.min(Defs.WORLD_HEIGHT - Defs.HEIGHT, s.y - s.height*4)));
             }
-            else
-            {
-                centerCamera();
-            }
-        }
-        else
-        {
-            centerCamera();
         }
         
         for (key in client.chars.keys())

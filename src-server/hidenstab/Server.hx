@@ -81,32 +81,25 @@ class Server extends ThreadServer<ClientData, ByteArray>
             case Defs.MSG_SEND_MOVING:
             {
                 // set moving
-                var senderId = msg.readInt();
+                var mx = msg.readByte();
+                var my = msg.readByte();
                 
-                if (id == senderId)
-                {
-                    var mx = msg.readByte();
-                    var my = msg.readByte();
-                    
-                    if (char == null) return;
-                    
-                    char.moving.x = mx;
-                    char.moving.y = my;
-                }
+                if (char == null) return;
+                
+                char.moving.x = mx;
+                char.moving.y = my;
             }
             case Defs.MSG_SEND_ATTACK:
             {
                 // attack
-                var senderId = msg.readInt();
                 if (char == null) return;
-                if (id == senderId) char.attack();
+                char.attack();
             }
             case Defs.MSG_SEND_TALK:
             {
                 // talk
-                var senderId = msg.readInt();
                 if (char == null) return;
-                if (id == senderId) char.talk();
+                char.talk();
             }
             case Defs.MSG_SEND_RESPAWN:
             {
@@ -198,7 +191,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
     {
         var client = clients.get(guid);
         client.ready = false;
-        clients.remove(guid);
         waitForRespawn[guid] = client;
     }
     
@@ -206,10 +198,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
     {
         var client = waitForRespawn.get(guid);
         waitForRespawn.remove(guid);
-        var newGuid = getGuid();
-        trace(Date.now().toString() + ": " + guid + " respawn as " + newGuid);
-        client.guid = newGuid;
-        clients.set(client.guid, client);
+        trace(Date.now().toString() + ": " + guid + " respawn");
         spawn(client, false);
         client.ready = true;
     }
@@ -299,7 +288,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     function spawnRandom()
     {
-        
         var newGuid = getGuid();
         var char:Stabber = StabberPool.get(newGuid, false);
         char.x = Std.random(Defs.WORLD_WIDTH);
@@ -320,6 +308,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         }
         catch (e:Dynamic)
         {
+            trace('bad write: ' + c.guid);
             if (Sys.time() - c.lastGoodWrite > Defs.TIMEOUT)
             {
                 trace(c.guid + " timed out");

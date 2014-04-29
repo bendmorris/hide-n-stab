@@ -33,7 +33,6 @@ class Client
     
     public var score:Int = 0;
     
-    public var newChars:Array<Stabber>;
     public var chars:Map<Int, Stabber>;
     public var id:Int=-1;
     var buf:ByteArray;
@@ -45,7 +44,6 @@ class Client
         chars = new Map();
         lastSeen = new Map();
         thisSeen = new Map();
-        newChars = new Array();
         buf = new ByteArray();
     }
     
@@ -69,7 +67,8 @@ class Client
     public function update()
     {
         //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
-        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 3))
+        while (socket.bytesAvailable >= waitForBytes &&
+               socket.bytesAvailable >= 2)
         {
             if (waitForBytes == 0)
             {
@@ -84,17 +83,17 @@ class Client
                 try
                 {
                     socket.readBytes(buf, 0, waitForBytes);
-                    buf.uncompress();
-                    readMessage(buf);
-                    
-                    buf.clear();
-                    waitForBytes = 0;
                 }
                 catch(e:Dynamic)
                 {
-                    
+                    socket.readBytes(buf);
                 }
                 
+                buf.uncompress();
+                readMessage(buf, socket.bytesAvailable >= waitForBytes);
+                
+                buf.clear();
+                waitForBytes = 0;
             }
             
             //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
@@ -106,7 +105,7 @@ class Client
     
     var seenDeath:Bool = false;
     
-    function readMessage(buf:ByteArray)
+    function readMessage(buf:ByteArray, lag:Bool=false)
     {
         var msgType = buf.readByte();
         
@@ -122,7 +121,7 @@ class Client
                 seenDeath = false;
             }
             case Defs.MSG_SEND_CHARS: {
-                if (needRespawn) return;
+                if (needRespawn || lag) return;
                 
                 // character updates
                 var n = buf.readByte();
@@ -137,13 +136,14 @@ class Client
                     if (char == null)
                     {
                         char = StabberPool.get(guid);
-                        chars[guid] = char;
-                        newChars.push(char);
+                        
                         if (guid == id)
                         {
                             HXP.camera.x = char.x - Defs.WIDTH/2;
                             HXP.camera.y = char.y - Defs.HEIGHT/2;
                         }
+                        
+                        window.add(char);
                         
                         newChar = true;
                     }
