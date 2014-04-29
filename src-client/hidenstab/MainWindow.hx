@@ -158,7 +158,9 @@ class MainWindow extends Scene
                 
                 var curTime = Date.now().getTime();
                 
-                if (moving.x != lastMovingSent.x || moving.y != lastMovingSent.y || curTime - lastMovingSentTime > Defs.MOVE_SEND_FREQ)
+                if (moving.x != lastMovingSent.x || 
+                    moving.y != lastMovingSent.y || 
+                    curTime - lastMovingSentTime > Defs.MOVE_SEND_FREQ)
                 {
                     var ba = Data.getByteArray();
                     ba.writeByte(Defs.MSG_SEND_MOVING);
