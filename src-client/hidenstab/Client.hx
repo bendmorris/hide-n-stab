@@ -62,6 +62,7 @@ class Client
         socket.connect(host, port);
     }
     
+    public var needRespawn:Bool = false;
     var waitForBytes:UInt = 0;
     
     public function update()
@@ -120,6 +121,8 @@ class Client
                 seenDeath = false;
             }
             case Defs.MSG_SEND_CHARS: {
+                if (needRespawn) return;
+                
                 // character updates
                 var n = buf.readByte();
                 
@@ -173,7 +176,7 @@ class Client
                             HXP.screen.shake(4, 0.2);
                             window.contLabel.alpha = 1;
                             window.contLabel.visible = true;
-                            window.needRespawn = true;
+                            needRespawn = true;
                             if (!seenDeath) 
                             {
                                 Sound.playSound("lose");
@@ -206,6 +209,8 @@ class Client
             }
             case Defs.MSG_SEND_KILL_SUCCESS, Defs.MSG_SEND_KILL_FAIL:
             {
+                if (needRespawn) return;
+                
                 var success = msgType == Defs.MSG_SEND_KILL_SUCCESS;
                 
                 if (success)

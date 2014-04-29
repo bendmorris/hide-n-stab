@@ -95,7 +95,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
                         var mx = msg.readByte();
                         var my = msg.readByte();
                         
-                        if (char == null) return;
+                        if (char == null) continue;
                         
                         char.moving.x = mx;
                         char.moving.y = my;
@@ -105,14 +105,14 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 {
                     // attack
                     var senderId = msg.readInt();
-                    if (char == null) return;
+                    if (char == null) continue;
                     if (id == senderId) char.attack();
                 }
                 case Defs.MSG_SEND_TALK:
                 {
                     // talk
                     var senderId = msg.readInt();
-                    if (char == null) return;
+                    if (char == null) continue;
                     if (id == senderId) char.talk();
                 }
                 case Defs.MSG_SEND_RESPAWN:

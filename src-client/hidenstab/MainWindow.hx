@@ -30,8 +30,6 @@ class MainWindow extends Scene
     public var contLabel:BitmapText;
     public var scoreLabel:BitmapText;
     
-    public var needRespawn:Bool = false;
-    
     override public function begin()
     {
         var b = new Backdrop();
@@ -126,7 +124,7 @@ class MainWindow extends Scene
             add(newChar);
         }
         
-        if (needRespawn)
+        if (client.needRespawn)
         {
             if (Input.pressed("continue"))
             {
@@ -134,7 +132,7 @@ class MainWindow extends Scene
                 ba.writeByte(Defs.MSG_SEND_RESPAWN);
                 Data.write(client.socket);
                 
-                needRespawn = false;
+                client.needRespawn = false;
                 contLabel.visible = false;
             }
         }
@@ -213,7 +211,7 @@ class MainWindow extends Scene
         for (key in client.chars.keys())
         {
             var char = client.chars.get(key);
-            if (char.dead)
+            if (char.dead && char.guid != client.id)
             {
                 remove(char);
             }
