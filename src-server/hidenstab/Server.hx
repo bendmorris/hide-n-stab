@@ -217,6 +217,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function clientConnected(s:Socket):ClientData
     {
+        s.setFastSend(true);
+        
         var c = new ClientData(s);
         clients.set(c.guid, c);
         clientCount += 1;
