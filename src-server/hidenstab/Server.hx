@@ -71,62 +71,52 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     function readMessage(c:ClientData, msg:ByteArray)
     {
-        msg.uncompress();
-        
         var id = c.guid;
         var char = chars.get(id);
         
-        while (msg.bytesAvailable > 0)
+        var msgType = msg.readByte();
+        
+        switch(msgType)
         {
-            var msgType = msg.readByte();
-            
-            switch(msgType)
+            case Defs.MSG_SEND_MOVING:
             {
-                /*case Defs.MSG_SEND_CHARS:
+                // set moving
+                var senderId = msg.readInt();
+                
+                if (id == senderId)
                 {
-                    // send update
-                    c.update(chars);
-                }*/
-                case Defs.MSG_SEND_MOVING:
-                {
-                    // set moving
-                    var senderId = msg.readInt();
+                    var mx = msg.readByte();
+                    var my = msg.readByte();
                     
-                    if (id == senderId)
-                    {
-                        var mx = msg.readByte();
-                        var my = msg.readByte();
-                        
-                        if (char == null) continue;
-                        
-                        char.moving.x = mx;
-                        char.moving.y = my;
-                    }
-                }
-                case Defs.MSG_SEND_ATTACK:
-                {
-                    // attack
-                    var senderId = msg.readInt();
                     if (char == null) continue;
-                    if (id == senderId) char.attack();
+                    
+                    char.moving.x = mx;
+                    char.moving.y = my;
                 }
-                case Defs.MSG_SEND_TALK:
-                {
-                    // talk
-                    var senderId = msg.readInt();
-                    if (char == null) continue;
-                    if (id == senderId) char.talk();
-                }
-                case Defs.MSG_SEND_RESPAWN:
-                {
-                    // respawn
-                    if (waitForRespawn.exists(id))
-                    {
-                        respawn(id);
-                    }
-                }
-                default: {}
             }
+            case Defs.MSG_SEND_ATTACK:
+            {
+                // attack
+                var senderId = msg.readInt();
+                if (char == null) continue;
+                if (id == senderId) char.attack();
+            }
+            case Defs.MSG_SEND_TALK:
+            {
+                // talk
+                var senderId = msg.readInt();
+                if (char == null) continue;
+                if (id == senderId) char.talk();
+            }
+            case Defs.MSG_SEND_RESPAWN:
+            {
+                // respawn
+                if (waitForRespawn.exists(id))
+                {
+                    respawn(id);
+                }
+            }
+            default: {}
         }
     }
     
