@@ -20,9 +20,8 @@ class Data
     
     public static function write(socket:Socket)
     {
-#if server
         byteArray.compress();
-#end
+        
         var l:UInt = byteArray.length;
         var b1:UInt = (l & 0xFF00) >> 8;
         var b2:UInt = l & 0xFF;

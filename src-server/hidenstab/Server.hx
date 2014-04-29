@@ -71,6 +71,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     function readMessage(c:ClientData, msg:ByteArray)
     {
+        msg.uncompress();
+        
         var id = c.guid;
         var char = chars.get(id);
         

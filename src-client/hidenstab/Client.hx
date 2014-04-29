@@ -71,7 +71,7 @@ class Client
     public function update()
     {
         //trace(Std.int(socket.bytesAvailable) + "/" + waitForBytes);
-        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 4))
+        while (Std.int(socket.bytesAvailable) >= Math.max(waitForBytes, 3))
         {
             if (waitForBytes == 0)
             {
