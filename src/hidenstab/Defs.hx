@@ -31,6 +31,7 @@ class Defs
     public static inline var Y_SPEED:Float=0.67;
     public static inline var SERVER_UPDATE_FREQ:Float=1/30;
     public static inline var MOVE_SEND_FREQ:Float=0.33;
+    public static inline var TIMEOUT:Float=10;
     public static inline var GRADUAL_MOVE_TIME:Float=SERVER_UPDATE_FREQ;
     
     public static inline var MSG_SEND_GUID=0;

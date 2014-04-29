@@ -324,11 +324,15 @@ class Server extends ThreadServer<ClientData, ByteArray>
         try
         {
             Data.write(socket);
+            c.lastGoodWrite = Sys.time();
         }
         catch (e:Dynamic)
         {
-            trace('write failed to ' + c.guid);
-            stopClient(socket);
+            if (Sys.time() - c.lastGoodWrite > Defs.TIMEOUT)
+            {
+                trace(c.guid + " timed out");
+                stopClient(socket);
+            }
         }
     }
 }

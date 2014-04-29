@@ -17,6 +17,9 @@ class Client
 {
     static var _current:Client;
     public static var current(get, never):Client;
+    
+    public var lastGoodWrite:Float = 0;
+    
     static function get_current()
     {
         if (_current == null) _current = new Client();
