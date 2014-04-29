@@ -74,6 +74,8 @@ class Server extends ThreadServer<ClientData, ByteArray>
         var id = c.guid;
         var char = chars.get(id);
         
+        if (char == null) return;
+        
         while (msg.bytesAvailable > 0)
         {
             var msgType = msg.readByte();
@@ -92,8 +94,10 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     
                     if (id == senderId)
                     {
-                        char.moving.x = msg.readByte();
-                        char.moving.y = msg.readByte();
+                        var mx = msg.readByte();
+                        var my = msg.readByte();
+                        char.moving.x = mx;
+                        char.moving.y = my;
                     }
                 }
                 case Defs.MSG_SEND_ATTACK:
