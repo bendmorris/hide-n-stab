@@ -159,12 +159,10 @@ class Client
                     var mx = buf.readByte();
                     var my = buf.readByte();
                     var dir = buf.readBoolean();
-                    if (true)//(guid != id)
-                    {
-                        char.moving.x = mx;
-                        char.moving.y = my;
-                        char.facingRight = dir;
-                    }
+                    char.moving.x = mx;
+                    char.moving.y = my;
+                    char.facingRight = dir;
+                    
                     var newState:Int = buf.readByte();
                     if (newState == 6)
                     {
