@@ -231,6 +231,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         char.y = Std.random(Defs.WORLD_HEIGHT);
         chars.set(c.guid, char);
         charCount += 1;
+        
         c.stabber = char;
         
         // add random non-pc characters
