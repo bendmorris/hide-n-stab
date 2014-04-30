@@ -308,11 +308,13 @@ class Stabber extends Entity
     
     public function gradualMove(x:Float, y:Float)
     {
-        originalPos.x = this.x;
+        /*originalPos.x = this.x;
         originalPos.y = this.y;
         moveToward.x = x;
         moveToward.y = y;
-        moveTowardTimer = 0;
+        moveTowardTimer = 0;*/
+        this.x = x;
+        this.y = y;
     }
     
     public override function update()
