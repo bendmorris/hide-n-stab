@@ -120,6 +120,8 @@ class Client
                 HXP.screen.shake(4, 0.2);
                 Sound.playSound("start");
                 seenDeath = false;
+                needRespawn = false;
+                window.contLabel.visible = false;
             }
             case Defs.MSG_SEND_CHARS: {
                 if (needRespawn || lag) return;
