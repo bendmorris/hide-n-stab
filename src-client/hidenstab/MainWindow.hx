@@ -83,8 +83,12 @@ class MainWindow extends Scene
             e.layer = -1;
             add(e);
         }
+        
+        lastFpsUpdate = Date.now().getTime();
     }
     
+    var lastFpsUpdate:Float;
+    var frames:Int = 0;
     override public function update()
     {
         var client = Client.current;
@@ -198,6 +202,23 @@ class MainWindow extends Scene
             {
                 remove(char);
             }
+        }
+        
+        frames += 1;
+        
+        var sysTime = Date.now().getTime();
+        var elapsed = (sysTime - lastFpsUpdate) / 1000;
+        if (elapsed >= 1)
+        {
+            var fps = frames / elapsed;
+            
+            var ba = Data.getByteArray();
+            ba.writeByte(Defs.MSG_SEND_FPS);
+            ba.writeByte(Std.int(fps));
+            Data.write(client.socket);
+            
+            lastFpsUpdate = sysTime;
+            frames = 0;
         }
         
         super.update();

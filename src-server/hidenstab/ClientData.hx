@@ -1,6 +1,7 @@
 package hidenstab;
 
 import sys.net.Socket;
+import com.haxepunk.HXP;
 import hidenstab.Defs;
 import hidenstab.Stabber;
 
@@ -10,10 +11,22 @@ class ClientData {
     public var stabber:Stabber;
     public var guid:Guid;
     
+    public var fps(default, set):Float = 30;
+    function set_fps(f:Float)
+    {
+        lastFramerates.push(f);
+        if (lastFramerates.length > 5) lastFramerates.shift();
+        fps = Lambda.fold(lastFramerates, function (a, b) return a+b, 0) / lastFramerates.length;
+        return fps;
+    }
+    var lastFramerates:Array<Float>;
+    public var elapsed:Float=0;
+    
     public var respawned:Bool=false;
     public var ready:Bool=true;
     
     public var lastGoodWrite:Float = 0;
+    public var timeout:Float = 0;
     
     public function new(s:Socket)
     {
@@ -21,6 +34,7 @@ class ClientData {
         guid = Defs.newGuid();
         stabber = StabberPool.get(guid, true);
         nearby = new Array();
+        lastFramerates = [30];
     }
     
     // called when the player's client has been disconnected
@@ -35,6 +49,13 @@ class ClientData {
     public function update(chars:Map<Guid, Stabber>)
     {
         var me = stabber;
+        nearbyCount = 0;
+        
+        elapsed += HXP.elapsed;
+        timeout += HXP.elapsed;
+        if (elapsed < 1./fps) return false;
+        
+        elapsed -= 1./fps;
         
         if (me != null)
         {
@@ -45,6 +66,10 @@ class ClientData {
             if (chars.get(guid) != null)
             {
                 nearby[nearbyCount++] = me;
+            }
+            else
+            {
+                return false;
             }
             
             for (guid in chars.keys())
@@ -77,8 +102,6 @@ class ClientData {
                 if (char.state == Dead && char.pc) stateCode += 1;
                 byteArray.writeByte(stateCode);
             }
-            
-            nearbyCount = 0;
             
             return true;
         }

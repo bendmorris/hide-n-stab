@@ -109,6 +109,12 @@ class Server extends ThreadServer<ClientData, ByteArray>
                     respawn(id);
                 }
             }
+            case Defs.MSG_SEND_FPS:
+            {
+                var fps = msg.readByte();
+                c.fps = HXP.clamp(fps, 2, 60);
+                if (fps > 10) c.timeout = 0;
+            }
             default: {}
         }
     }
@@ -308,7 +314,6 @@ class Server extends ThreadServer<ClientData, ByteArray>
         }
         catch (e:Dynamic)
         {
-            trace('bad write: ' + c.guid);
             if (Sys.time() - c.lastGoodWrite > Defs.TIMEOUT)
             {
                 trace(c.guid + " timed out");

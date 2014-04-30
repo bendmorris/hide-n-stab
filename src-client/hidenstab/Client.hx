@@ -34,7 +34,7 @@ class Client
     public var score:Int = 0;
     
     public var chars:Map<Int, Stabber>;
-    public var id:Int=-1;
+    public var id:Int = -1;
     var buf:ByteArray;
     
     public var window:MainWindow;
@@ -113,6 +113,7 @@ class Client
         {
             case Defs.MSG_SEND_GUID: {
                 // receive this character's ID
+                if (id != -1) window.remove(chars[id]);
                 id = buf.readInt();
                 score = 0;
                 updateScoreLabel();
@@ -129,6 +130,7 @@ class Client
                 for (i in 0 ... n)
                 {
                     var guid = buf.readInt();
+                    
                     var char:Stabber = chars.get(guid);
                     
                     var newChar:Bool = false;
@@ -136,12 +138,6 @@ class Client
                     if (char == null)
                     {
                         char = StabberPool.get(guid);
-                        
-                        if (guid == id)
-                        {
-                            HXP.camera.x = char.x - Defs.WIDTH/2;
-                            HXP.camera.y = char.y - Defs.HEIGHT/2;
-                        }
                         
                         window.add(char);
                         
@@ -178,6 +174,7 @@ class Client
                             window.contLabel.alpha = 1;
                             window.contLabel.visible = true;
                             needRespawn = true;
+                            
                             if (!seenDeath) 
                             {
                                 Sound.playSound("lose");

@@ -29,10 +29,10 @@ class Defs
     public static inline var RUN_MULT:Float=2.5;
     public static inline var REVEAL_TIME:Float=3;
     public static inline var Y_SPEED:Float=0.67;
-    public static inline var SERVER_UPDATE_FREQ:Float=1/20;
+    public static inline var SERVER_UPDATE_FREQ:Float=1/120;
     public static inline var MOVE_SEND_FREQ:Float=0.5;
     public static inline var TIMEOUT:Float=10;
-    public static inline var GRADUAL_MOVE_TIME:Float=SERVER_UPDATE_FREQ;
+    public static inline var GRADUAL_MOVE_TIME:Float=1/20;
     
     public static inline var MSG_SEND_GUID=0;
     public static inline var MSG_SEND_CHARS=1;
@@ -42,6 +42,7 @@ class Defs
     public static inline var MSG_SEND_KILL_SUCCESS=5;
     public static inline var MSG_SEND_KILL_FAIL=6;
     public static inline var MSG_SEND_RESPAWN=7;
+    public static inline var MSG_SEND_FPS=8;
     
     public static function init()
     {
