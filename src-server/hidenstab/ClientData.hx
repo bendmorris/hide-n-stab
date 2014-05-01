@@ -27,6 +27,8 @@ class ClientData {
     
     public var lastGoodWrite:Float = 0;
     public var timeout:Float = 0;
+
+    public var lastPlayersSent:Float=0;
     
     public function new(s:Socket)
     {

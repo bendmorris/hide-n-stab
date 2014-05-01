@@ -43,6 +43,7 @@ class Defs
     public static inline var MSG_SEND_KILL_FAIL=6;
     public static inline var MSG_SEND_RESPAWN=7;
     public static inline var MSG_SEND_FPS=8;
+    public static inline var MSG_SEND_PLAYERS=9;
     
     public static function init()
     {

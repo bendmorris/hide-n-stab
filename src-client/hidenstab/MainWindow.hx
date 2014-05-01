@@ -29,6 +29,7 @@ class MainWindow extends Scene
     public var failLabel:BitmapText;
     public var contLabel:BitmapText;
     public var scoreLabel:BitmapText;
+    public var playersLabel:BitmapText;
     
     override public function begin()
     {
@@ -67,6 +68,10 @@ class MainWindow extends Scene
                                    4, -1,
                                    0, 0, FONT_OPTIONS);
         scoreLabel.color = 0xFF0000;
+        playersLabel = new BitmapText(" ",
+                                   0, 0,
+                                   0, 0, FONT_OPTIONS);
+        playersLabel.color = 0x008000;
         
         for (g in [killLabel, failLabel, contLabel])
         {
@@ -76,7 +81,7 @@ class MainWindow extends Scene
             g.x -= g.textWidth/2;
         }
         
-        for (g in [killLabel, failLabel, contLabel, scoreLabel])
+        for (g in [killLabel, failLabel, contLabel, scoreLabel, playersLabel])
         {
             g.scrollX = g.scrollY = 0;
             var e = new Entity(0, 0, g);
@@ -129,6 +134,17 @@ class MainWindow extends Scene
                 var ba = Data.getByteArray();
                 ba.writeByte(Defs.MSG_SEND_RESPAWN);
                 Data.write(client.socket);
+                
+                client.needRespawn = false;
+                contLabel.visible = false;
+                client.id == -1;
+            }
+            else
+            {
+                for (char in client.chars.iterator())
+                {
+                    char.moving.x = char.moving.y = 0;
+                }
             }
         }
         else if (client.id != -1)
