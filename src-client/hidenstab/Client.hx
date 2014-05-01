@@ -32,6 +32,19 @@ class Client
     public var socket:Socket;
     
     public var score:Int = 0;
+    public var players(default, set):Int = 0;
+    function set_players(p:Int)
+    {
+        if (players != p)
+        {
+            window.playersLabel.text = (p == 1) ? ("no one else is playing now...") : (p-1) + " other player" + (p==2 ? "" : "s") + " online";
+            window.playersLabel.color = (p == 1) ? 0xFF0000 : 0x008000;
+            window.playersLabel.computeTextSize();
+            window.playersLabel.x = Defs.WIDTH - window.playersLabel.textWidth - 2;
+            window.playersLabel.y = Defs.HEIGHT - window.playersLabel.textHeight - 8;
+        }
+        return players = p;
+    }
     
     public var chars:Map<Int, Stabber>;
     public var id:Int = -1;
@@ -224,6 +237,10 @@ class Client
                 {
                     window.failLabel.alpha = 1;
                 }
+            }
+            case Defs.MSG_SEND_PLAYERS:
+            {
+                players = buf.readByte();
             }
             default: {}
         }

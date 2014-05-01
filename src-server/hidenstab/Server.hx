@@ -14,10 +14,11 @@ class Server extends ThreadServer<ClientData, ByteArray>
 {
     static inline var UPDATE_FREQ:Float=Defs.SERVER_UPDATE_FREQ;
     
+    public var clientCount:Int = 0;
+    public var chars:Map<Guid, Stabber>;
+
     var clients:Map<Guid, ClientData>;
     var waitForRespawn:Map<Guid, ClientData>;
-    var clientCount:Int = 0;
-    var chars:Map<Guid, Stabber>;
     var charCount:Int = 0;
     
     var lastUpdate:Float = 0;
@@ -162,7 +163,20 @@ class Server extends ThreadServer<ClientData, ByteArray>
                 if (client.ready)
                 {
                     var success = client.update(chars);
-                    if (success) attemptWrite(client);
+                    if (success)
+                    {
+                        attemptWrite(client);
+                        
+                        if (clientCount != client.lastPlayersSent)
+                        {
+                            var c = clientCount;
+                            var byteArray = Data.getByteArray();
+                            byteArray.writeByte(Defs.MSG_SEND_PLAYERS);
+                            byteArray.writeByte(c);
+                            attemptWrite(client);
+                            client.lastPlayersSent = c;
+                        }
+                    }
                 }
             }
             
@@ -211,6 +225,12 @@ class Server extends ThreadServer<ClientData, ByteArray>
     
     override function clientConnected(s:Socket):ClientData
     {
+        if (clientCount >= 50) 
+        {
+            s.close();
+            return null;
+        }
+        
         s.setFastSend(true);
         
         var c = new ClientData(s);
@@ -304,7 +324,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
         charCount += 1;
     }
     
-    function attemptWrite(c:ClientData)
+    public function attemptWrite(c:ClientData)
     {
         var socket = c.socket;
         
