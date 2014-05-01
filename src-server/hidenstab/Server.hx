@@ -318,6 +318,7 @@ class Server extends ThreadServer<ClientData, ByteArray>
             if (Sys.time() - c.lastGoodWrite > Defs.TIMEOUT)
             {
                 trace(c.guid + " timed out");
+                c.ready = false;
                 stopClient(socket);
             }
         }
