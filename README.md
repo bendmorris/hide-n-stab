@@ -1,8 +1,10 @@
 Hide-n-Stab!
 ============
 
-Hide-n-Stab is an online, multiplayer stealth action game. You can play in your 
-browser [here](http://54.244.244.60).
+Hide-n-Stab is an online, multiplayer stealth action game. You can play it in 
+your browser absolutely free - click 
+[here](http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid=36156) 
+to view the game on LD and play or rate.
 
 There are many cloaked figures that appear identical, but they differ beneath 
 the surface - some are other players like yourself, while others are only 
